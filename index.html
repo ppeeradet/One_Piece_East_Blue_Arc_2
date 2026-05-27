@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🏴‍☠️ ONE PIECE คณิตผจญภัย อีสต์บลู · ภาค 2</title>
+<style>
+:root{
+  --ocean:#0b1a38;--deep:#060e22;--gold:#f4a017;--gold2:#ffd36e;
+  --red:#e63946;--teal:#1aa67a;--sky:#87ceeb;--wood:#7d4e1f;
+  --card:rgba(255,255,255,0.07);--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;
+  background:var(--deep);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;}
+
+/* ── BG ── */
+.bg{position:fixed;inset:0;z-index:0;
+  background:linear-gradient(180deg,#071020 0%,#0d2b5e 50%,#0a1c44 100%);}
+.star{position:absolute;background:#fff;border-radius:50%;
+  animation:twinkle 3s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:1}}
+.wave{position:absolute;bottom:0;width:200%;height:100px;opacity:.4;}
+.w1{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 60'%3E%3Cpath d='M0 30Q75 0 150 30Q225 60 300 30Q375 0 450 30Q525 60 600 30L600 60L0 60Z' fill='%231a5276'/%3E%3C/svg%3E") repeat-x;
+  background-size:600px;animation:wave 7s linear infinite;}
+.w2{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 60'%3E%3Cpath d='M0 40Q100 10 200 40Q300 70 400 40Q500 10 600 40Q700 70 800 40L800 60L0 60Z' fill='%230d3b6e'/%3E%3C/svg%3E") repeat-x;
+  background-size:800px;animation:wave 11s linear infinite reverse;bottom:-10px;}
+@keyframes wave{to{transform:translateX(-600px)}}
+
+/* ── SCREENS ── */
+.sc{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;overflow:hidden;}
+.sc.on{display:flex;}
+
+/* ── WELCOME ── */
+#sw{align-items:center;justify-content:center;gap:0;}
+.logo-wrap{text-align:center;padding:12px 0 4px;}
+.logo{font-size:clamp(1.8rem,6vw,3rem);font-weight:900;color:var(--gold);
+  text-shadow:0 0 20px rgba(244,160,23,.8),3px 3px 0 #5a2d00;
+  letter-spacing:1px;line-height:1.15;animation:glow 2s ease-in-out infinite;}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(244,160,23,.8),3px 3px 0 #5a2d00}
+  50%{text-shadow:0 0 40px rgba(244,160,23,1),3px 3px 0 #5a2d00}}
+.logo-sub{color:var(--sky);font-size:clamp(.85rem,2.5vw,1.1rem);margin:6px 0 0;letter-spacing:1px;}
+.ship-deco{font-size:3.5rem;animation:bob 3s ease-in-out infinite;margin:8px 0;}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+
+.wcard{background:rgba(13,27,62,.7);border:2px solid rgba(244,160,23,.4);
+  border-radius:20px;padding:24px 28px;width:min(380px,92vw);
+  backdrop-filter:blur(12px);box-shadow:0 0 40px rgba(0,0,0,.5);}
+.wcard label{color:#aed6f1;font-size:.9rem;display:block;margin-bottom:6px;}
+.wcard input{width:100%;padding:12px 14px;background:rgba(255,255,255,.1);
+  border:2px solid rgba(244,160,23,.4);border-radius:10px;color:#fff;
+  font-size:1.1rem;outline:none;margin-bottom:14px;
+  transition:border-color .2s;}
+.wcard input:focus{border-color:var(--gold);}
+
+.btn-p{display:block;width:100%;padding:14px;
+  background:linear-gradient(135deg,#f4a017,#d4860f);
+  border:none;border-radius:12px;color:#fff;font-size:1.1rem;font-weight:700;
+  cursor:pointer;box-shadow:0 4px 18px rgba(244,160,23,.4);
+  transition:all .15s;margin-bottom:10px;}
+.btn-p:active{transform:scale(.97);box-shadow:none;}
+.btn-s{display:block;width:100%;padding:12px;
+  background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.25);
+  border-radius:12px;color:#aed6f1;font-size:1rem;cursor:pointer;transition:all .15s;}
+.btn-s:active{background:rgba(255,255,255,.15);}
+
+/* ── MAP ── */
+#sm{background:transparent;}
+.mhdr{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:rgba(0,0,0,.5);border-bottom:1px solid rgba(244,160,23,.25);}
+.mhdr-title{flex:1;color:var(--gold);font-weight:700;font-size:1rem;text-align:center;}
+.mhdr-player{color:var(--sky);font-size:.85rem;}
+
+.map-list{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px;}
+.isl{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);
+  border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.isl.unlocked{border-color:rgba(244,160,23,.45);}
+.isl.done{border-color:rgba(26,166,122,.6);background:rgba(26,166,122,.08);}
+.isl.locked{opacity:.45;cursor:not-allowed;}
+.isl:not(.locked):active{transform:scale(.98);}
+.isl-icon{font-size:2rem;min-width:44px;text-align:center;}
+.isl-info{flex:1;}
+.isl-name{color:#fff;font-size:.95rem;font-weight:700;margin-bottom:3px;}
+.isl-sub{color:var(--sky);font-size:.78rem;}
+.isl-stars{font-size:.9rem;margin-top:3px;}
+.isl-arrow{font-size:1.2rem;color:var(--gold);}
+
+/* ── STORY ── */
+#si{}
+.shdr{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:rgba(0,0,0,.6);border-bottom:1px solid rgba(244,160,23,.2);}
+.story-wrap{flex:1;display:flex;flex-direction:column;
+  max-width:720px;width:100%;margin:0 auto;padding:16px 16px 12px;}
+.story-icon{font-size:2.5rem;text-align:center;margin-bottom:8px;}
+.story-title{color:var(--gold);font-size:clamp(1.1rem,3.5vw,1.5rem);font-weight:900;
+  text-align:center;margin-bottom:12px;text-shadow:0 0 12px rgba(244,160,23,.5);}
+.story-body{flex:1;overflow-y:auto;color:#dde8f5;
+  font-size:clamp(.92rem,2.5vw,1.05rem);line-height:1.85;
+  background:rgba(255,255,255,.05);border-radius:12px;
+  padding:14px 16px;margin-bottom:14px;}
+.story-body strong{color:var(--gold);}
+.btn-mission{align-self:center;padding:13px 32px;
+  background:linear-gradient(135deg,#c0392b,#e74c3c);
+  border:none;border-radius:12px;color:#fff;font-size:1.05rem;font-weight:700;
+  cursor:pointer;box-shadow:0 4px 14px rgba(192,57,43,.5);transition:all .15s;}
+.btn-mission:active{transform:scale(.97);}
+
+/* ── GAME ── */
+#sg{}
+.ghdr{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;background:rgba(0,0,0,.55);
+  border-bottom:1px solid rgba(244,160,23,.18);flex-shrink:0;}
+.g-hearts{font-size:1.15rem;letter-spacing:1px;}
+.g-ch{color:var(--gold);font-size:.82rem;font-weight:700;text-align:center;}
+.g-qcount{font-size:.72rem;color:#999;text-align:center;}
+.g-score-wrap{text-align:right;}
+.g-score-total{color:var(--gold);font-size:1.15rem;font-weight:900;letter-spacing:.5px;
+  text-shadow:0 0 12px rgba(244,160,23,.7);}
+.g-score-ch{color:#7ecef4;font-size:.72rem;margin-top:1px;}
+.g-btns{display:flex;gap:6px;margin-top:2px;justify-content:flex-end;}
+
+.prog{height:4px;background:rgba(255,255,255,.1);flex-shrink:0;}
+.prog-fill{height:100%;background:var(--gold);transition:width .35s ease;}
+
+.q-area{padding:12px 16px 8px;background:rgba(0,0,0,.3);flex-shrink:0;}
+.q-text{color:#fff;font-size:clamp(1rem,3.3vw,1.25rem);font-weight:600;
+  line-height:1.65;text-align:center;}
+
+/* ── SCRATCH PAD ── */
+.scratch-zone{flex:1;min-height:0;display:flex;flex-direction:column;padding:6px 12px 4px;}
+.scratch-bar{display:flex;align-items:center;gap:6px;padding:0 2px;margin-bottom:5px;flex-shrink:0;flex-wrap:nowrap;}
+.scratch-lbl{color:#999;font-size:.72rem;white-space:nowrap;flex-shrink:0;}
+.cb{width:20px;height:20px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.cb.on{border-color:#fff;transform:scale(1.25);}
+.clr-btn{padding:4px 10px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.25);border-radius:6px;color:#ccc;font-size:.75rem;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.clr-btn.on{background:rgba(255,200,50,.3);border-color:rgba(255,200,50,.8);color:#ffd36e;}
+.clr-btns{margin-left:auto;display:flex;gap:5px;flex-shrink:0;}
+#scratch{flex:1;min-height:0;
+  background:rgba(255,255,255,.055);border:1.5px dashed rgba(255,255,255,.18);
+  border-radius:10px;cursor:crosshair;touch-action:none;display:block;width:100%;}
+
+/* ── ANSWERS ── */
+.ans-area{padding:8px 12px 10px;background:rgba(0,0,0,.35);
+  border-top:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.ch-btn{padding:13px 8px;background:rgba(255,255,255,.08);
+  border:2px solid rgba(255,255,255,.2);border-radius:10px;
+  color:#fff;font-size:clamp(.95rem,3vw,1.15rem);font-weight:600;
+  cursor:pointer;transition:all .15s;text-align:center;}
+.ch-btn:active:not(:disabled){transform:scale(.96);}
+.ch-btn.sel{background:rgba(244,160,23,.22);border-color:var(--gold);color:var(--gold);}
+.ch-btn.ok{background:rgba(26,166,122,.25);border-color:var(--teal);color:#1ddb96;}
+.ch-btn.bad{background:rgba(230,57,70,.22);border-color:var(--red);color:#ff8080;}
+.ch-btn:disabled{opacity:.7;cursor:default;}
+.cfm-btn{width:100%;padding:13px;border:none;border-radius:11px;
+  color:#fff;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .15s;}
+.cfm-btn:disabled{background:rgba(255,255,255,.1);color:#555;cursor:default;}
+.cfm-idle{background:linear-gradient(135deg,#1aa67a,#15806b);}
+.cfm-next{background:linear-gradient(135deg,#f4a017,#d4860f);}
+.cfm-btn:not(:disabled):active{transform:scale(.97);}
+
+/* ── SOLUTION BOX ── */
+#solBox{display:none;margin:6px 0 0;padding:10px 14px;
+  background:rgba(30,60,100,.85);border:1.5px solid rgba(100,180,255,.35);
+  border-radius:10px;font-size:.82rem;color:#c8e0ff;line-height:1.7;}
+#solBox.show{display:block;}
+#solBox .sol-title{color:#ffd36e;font-weight:700;font-size:.88rem;margin-bottom:4px;}
+#solBox .sol-step{font-family:monospace;font-size:.85rem;color:#a8d8ff;white-space:pre-wrap;}
+#solBox .sol-ans{color:#7effa0;font-weight:700;margin-top:4px;}
+
+/* ── FEEDBACK ── */
+#fb{position:fixed;inset:0;z-index:200;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;}
+#fb.on{opacity:1;}
+.fb-ico{font-size:5rem;animation:pop .4s ease-out;}
+@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── CHAPTER COMPLETE ── */
+#scc{align-items:center;justify-content:center;background:rgba(0,0,0,.82);}
+.cc-card{background:linear-gradient(135deg,#132d52,#0c1e38);
+  border:3px solid var(--gold);border-radius:22px;
+  padding:32px 36px;text-align:center;width:min(360px,90vw);
+  box-shadow:0 0 50px rgba(244,160,23,.25);}
+.cc-title{color:var(--gold);font-size:1.7rem;font-weight:900;margin-bottom:6px;}
+.cc-stars{font-size:2.3rem;letter-spacing:6px;margin:12px 0;}
+.cc-score{color:var(--sky);font-size:1.05rem;margin-bottom:8px;}
+.cc-score span{color:#fff;font-weight:700;font-size:1.3rem;}
+.cc-msg{color:#7fb3d3;font-size:.9rem;margin-bottom:22px;}
+
+/* ── VICTORY ── */
+#sv{align-items:center;justify-content:center;background:rgba(0,0,0,.85);}
+.vic-card{background:linear-gradient(135deg,#132d52,#0c1e38);
+  border:3px solid var(--gold);border-radius:22px;
+  padding:32px 28px;text-align:center;width:min(400px,92vw);}
+.vic-ico{font-size:3.5rem;margin-bottom:8px;}
+.vic-title{color:var(--gold);font-size:clamp(1.4rem,5vw,2rem);font-weight:900;margin-bottom:6px;}
+.vic-sub{color:var(--sky);font-size:.95rem;margin-bottom:16px;}
+.vic-score{color:#fff;font-size:1.4rem;margin-bottom:8px;}
+
+/* ── LEADERBOARD ── */
+#slb{overflow-y:auto;}
+.lb-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;
+  background:rgba(0,0,0,.55);border-bottom:1px solid rgba(244,160,23,.2);flex-shrink:0;}
+.lb-hdr-t{flex:1;color:var(--gold);font-weight:700;text-align:center;}
+.lb-body{max-width:600px;margin:0 auto;padding:18px 14px;}
+.lb-row{display:flex;align-items:center;padding:12px 16px;border-radius:11px;
+  margin-bottom:8px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);}
+.lb-row.me{background:rgba(244,160,23,.13);border-color:rgba(244,160,23,.45);}
+.lb-rank{color:var(--gold);font-weight:700;width:36px;font-size:1rem;}
+.lb-name{flex:1;color:#fff;font-size:.93rem;}
+.lb-sc{color:var(--sky);font-weight:700;font-size:.95rem;}
+.lb-dt{color:#777;font-size:.75rem;margin-left:8px;}
+.lb-empty{color:#888;text-align:center;padding:40px 20px;font-size:.95rem;}
+
+/* ── SHARED COMPONENTS ── */
+.bk{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  border-radius:8px;color:#ccc;font-size:.88rem;padding:6px 12px;cursor:pointer;transition:all .15s;}
+.bk:active{background:rgba(255,255,255,.2);}
+.mu{background:transparent;border:none;font-size:1.1rem;cursor:pointer;padding:4px;}
+
+/* ── PARTICLES ── */
+.ptcl{position:fixed;z-index:999;pointer-events:none;font-size:1.4rem;
+  animation:fly 1.1s ease-out forwards;}
+@keyframes fly{0%{transform:translateY(0) scale(1);opacity:1}
+  100%{transform:translateY(-110px) scale(.4);opacity:0}}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(244,160,23,.35);border-radius:2px;}
+</style>
+</head>
+<body>
+<!-- BG -->
+<div class="bg">
+  <div id="stars"></div>
+  <div class="wave w1"></div>
+  <div class="wave w2"></div>
+</div>
+
+<!-- WELCOME -->
+<div class="sc" id="sw">
+  <div class="logo-wrap">
+    <div class="ship-deco">🏴‍☠️ ⚓ 🚢</div>
+    <div class="logo">ONE PIECE<br>คณิตผจญภัย</div>
+    <div class="logo-sub">ภาค 2 · East Blue Arc 🆕</div>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 16px;">
+    <div class="wcard">
+      <label>⚔️ ชื่อนักผจญภัย</label>
+      <input id="inp" type="text" placeholder="พิมพ์ชื่อของเธอ..." autocomplete="off" maxlength="20"/>
+      <button class="btn-p" onclick="startGame()">🏴‍☠️ เริ่มการผจญภัย!</button>
+      <button class="btn-p" id="btnContinue" style="display:none;background:linear-gradient(135deg,#1aa67a,#2ecc99);box-shadow:0 4px 15px rgba(26,166,122,.5);" onclick="continueGame()"></button>
+      <button class="btn-s" onclick="show('slb')">🏆 ดูตาราง Ranking</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="sc" id="sm">
+  <div class="mhdr">
+    <button class="bk" onclick="switchPlayer()">🔄 เปลี่ยนผู้เล่น</button>
+    <div class="mhdr-title">🗺️ แผนที่ อีสต์บลู</div>
+    <div class="mhdr-player" id="mpPlayer"></div>
+    <button class="mu" id="muBtn" onclick="togMusic()">🔊</button>
+  </div>
+  <div id="mpScore" style="text-align:center;color:var(--gold2);font-size:.82rem;padding:2px 0 4px;letter-spacing:.5px;"></div>
+  <div class="map-list" id="mapList"></div>
+</div>
+
+<!-- STORY -->
+<div class="sc" id="si">
+  <div class="shdr">
+    <button class="bk" onclick="show('sm')">← แผนที่</button>
+    <div style="flex:1;color:var(--gold);font-weight:700;text-align:center;font-size:.9rem;">เนื้อเรื่อง</div>
+  </div>
+  <div class="story-wrap">
+    <div class="story-icon" id="sIcon"></div>
+    <div class="story-title" id="sTitle"></div>
+    <div class="story-body" id="sBody"></div>
+    <button class="btn-mission" onclick="startCh()">⚔️ เริ่มภารกิจ!</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="sc" id="sg">
+  <div class="ghdr">
+    <div>
+      <div class="g-hearts" id="gHearts">❤️❤️❤️</div>
+      <div class="g-qcount" id="gQC">ข้อ 1/10</div>
+    </div>
+    <div>
+      <div class="g-ch" id="gCh"></div>
+    </div>
+    <div>
+      <div class="g-score-wrap">
+        <div class="g-score-total">⭐ <span id="gScoreTot">0</span></div>
+        <div class="g-score-ch">ด่านนี้: <span id="gScore">0</span></div>
+      </div>
+      <div class="g-btns">
+        <button class="bk" style="font-size:.78rem;padding:4px 8px;" onclick="show('sm')">🗺️</button>
+        <button class="mu" style="font-size:1rem;" onclick="togMusic()">🔊</button>
+      </div>
+    </div>
+  </div>
+  <div class="prog"><div class="prog-fill" id="gProg" style="width:0%"></div></div>
+
+  <div class="q-area">
+    <div class="q-text" id="qText">...</div>
+    <div id="solBox">
+      <div class="sol-title">💡 วิธีคิด</div>
+      <div class="sol-step" id="solStep"></div>
+      <div class="sol-ans" id="solAns"></div>
+    </div>
+  </div>
+
+  <div class="scratch-zone">
+    <div class="scratch-bar">
+      <span class="scratch-lbl">✏️ ทดเลข</span>
+      <button class="cb on" style="background:#fff" data-c="#fff" onclick="setC(this)"></button>
+      <button class="cb" style="background:#4fc3f7" data-c="#4fc3f7" onclick="setC(this)"></button>
+      <button class="cb" style="background:#f06292" data-c="#f06292" onclick="setC(this)"></button>
+      <div class="clr-btns">
+        <button class="clr-btn" id="eraserBtn" onclick="toggleEraser(this)">🧹 ลบ</button>
+        <button class="clr-btn" onclick="clrCV()">🗑️ ล้าง</button>
+      </div>
+    </div>
+    <canvas id="scratch"></canvas>
+  </div>
+
+  <div class="ans-area">
+    <div class="ch-grid" id="chGrid"></div>
+    <button class="cfm-btn" id="cfmBtn" disabled onclick="onCfm()">✓ ยืนยัน</button>
+  </div>
+</div>
+
+<!-- FEEDBACK -->
+<div id="fb"><div class="fb-ico" id="fbIco"></div></div>
+
+<!-- CHAPTER COMPLETE -->
+<div class="sc" id="scc">
+  <div class="cc-card">
+    <div style="font-size:2.5rem;">🎉</div>
+    <div class="cc-title">ภารกิจสำเร็จ!</div>
+    <div class="cc-stars" id="ccSt">⭐⭐⭐</div>
+    <div class="cc-score">คะแนน: <span id="ccSc">0</span></div>
+    <div class="cc-msg" id="ccMsg"></div>
+    <button class="btn-p" onclick="show('sm')">🗺️ กลับแผนที่</button>
+  </div>
+</div>
+
+<!-- VICTORY -->
+<div class="sc" id="sv">
+  <div class="vic-card">
+    <div class="vic-ico">🏆👑🏴‍☠️</div>
+    <div class="vic-title">ราชาโจรสลัด!</div>
+    <div class="vic-sub">พิชิตอีสต์บลูสำเร็จแล้ว!</div>
+    <div class="vic-score">คะแนนรวม: <span id="vSc" style="color:var(--gold)">0</span></div>
+    <div id="vRank" style="color:var(--sky);margin-bottom:20px;font-size:.9rem;"></div>
+    <button class="btn-p" onclick="show('slb')">🏆 ดู Ranking</button>
+    <button class="btn-s" style="margin-top:8px;" onclick="goWelcome()">🔄 เล่นใหม่</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="sc" id="slb">
+  <div class="lb-hdr">
+    <button class="bk" onclick="goWelcome()">← กลับ</button>
+    <div class="lb-hdr-t">🏆 Ranking อีสต์บลู ภาค 2</div>
+  </div>
+  <div class="lb-body"><div id="lbList" class="lb-empty">กำลังโหลด...</div></div>
+</div>
+
+<script>
+const QBANK = {"0":[{"text":"ลูฟี่มีลูกธนู 708 ดอก ยิงออกไป 261 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":447,"choices":[457,1447,547,447],"_op":"sub","_a":708,"_b":261},{"text":"เรือออกเดินทาง 673 ตัน ส่งสินค้าลงท่า 235 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":438,"choices":[448,438,1438,538],"_op":"sub","_a":673,"_b":235},{"text":"ห้องเก็บสินค้ามี 8 แถว แถวละ 864 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":6912,"choices":[6824,6048,6912,7776],"_op":"mul","_a":864,"_b":8},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 193 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 486 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":679,"choices":[579,669,679,689],"_op":"add","_a":193,"_b":486},{"text":"กองทัพโจรภูเขาออกรบ 948 นาย กลับมา 316 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":632,"choices":[632,732,642,1632],"_op":"sub","_a":948,"_b":316},{"text":"คลังสมบัติมีเหรียญ 870 เบรี โจรงัดแงะไปได้ 228 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":642,"choices":[742,642,652,1642],"_op":"sub","_a":870,"_b":228},{"text":"เรือบรรทุกสินค้า 887 ตัน แวะท่าเรือรับสินค้าเพิ่ม 110 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":997,"choices":[1007,997,987,897],"_op":"add","_a":887,"_b":110},{"text":"คลังสมบัติมีเหรียญ 680 เบรี โจรงัดแงะไปได้ 332 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":348,"choices":[348,448,1348,358],"_op":"sub","_a":680,"_b":332},{"text":"แชงค์สเดินทางวันแรก 619 กิโลเมตร วันที่สองเดิน 154 กิโลเมตร ระยะทางทั้งสองวันรวมกันเป็นกี่กิโลเมตร?","ans":773,"choices":[773,783,673,763],"_op":"add","_a":619,"_b":154},{"text":"คลังสมบัติมีเหรียญ 990 เบรี โจรงัดแงะไปได้ 182 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":808,"choices":[908,808,1808,818],"_op":"sub","_a":990,"_b":182},{"text":"ระยะทางจากต้นทางถึงปลายทาง 657 กิโลเมตร แชงค์สเดินมาแล้ว 285 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":372,"choices":[1372,382,472,372],"_op":"sub","_a":657,"_b":285},{"text":"เรือออกเดินทางจากท่าแรก 680 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 120 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":800,"choices":[810,700,800,790],"_op":"add","_a":680,"_b":120},{"text":"เรือออกเดินทาง 665 ตัน ส่งสินค้าลงท่า 343 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":322,"choices":[322,332,1322,422],"_op":"sub","_a":665,"_b":343},{"text":"ลูฟี่มีลูกธนู 708 ดอก ยิงออกไป 376 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":332,"choices":[432,342,1332,332],"_op":"sub","_a":708,"_b":376},{"text":"ลูฟี่มีเสบียง 824 กิโลกรัม แจกจ่ายให้ลูกเรือไป 364 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":460,"choices":[1460,460,470,560],"_op":"sub","_a":824,"_b":364},{"text":"คลังสมบัติมีเหรียญ 632 เบรี โจรงัดแงะไปได้ 186 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":446,"choices":[446,456,1446,546],"_op":"sub","_a":632,"_b":186},{"text":"คลังสมบัติมีเหรียญ 603 เบรี โจรงัดแงะไปได้ 118 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":485,"choices":[495,485,1485,585],"_op":"sub","_a":603,"_b":118},{"text":"เรือ 7 ลำ ลำหนึ่งบรรทุกได้ 980 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":6860,"choices":[5880,6860,7840,7089],"_op":"mul","_a":980,"_b":7},{"text":"เรือออกเดินทาง 709 ตัน ส่งสินค้าลงท่า 376 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":333,"choices":[333,1333,433,343],"_op":"sub","_a":709,"_b":376},{"text":"เรือออกเดินทางจากท่าแรก 516 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 197 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":713,"choices":[703,723,613,713],"_op":"add","_a":516,"_b":197},{"text":"คลังหมู่บ้านฟูชามีเสบียง 462 กิโลกรัม รับของเพิ่มมาอีก 316 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":778,"choices":[778,768,788,678],"_op":"add","_a":462,"_b":316},{"text":"เรือออกเดินทางจากท่าแรก 789 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 183 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":972,"choices":[982,972,962,872],"_op":"add","_a":789,"_b":183},{"text":"โกดังเก็บสินค้า 211 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 227 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":438,"choices":[448,438,428,338],"_op":"add","_a":211,"_b":227},{"text":"ลูฟี่ฝึกซ้อม 243 ครั้งต่อวัน ใน 8 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":1944,"choices":[1853,2187,1944,1701],"_op":"mul","_a":243,"_b":8},{"text":"ลูกเรือ 3 คน แต่ละคนได้รับค่าจ้างคนละ 553 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":1659,"choices":[1106,1659,2212,1793],"_op":"mul","_a":553,"_b":3},{"text":"ลูฟี่มีเสบียง 685 กิโลกรัม แจกจ่ายให้ลูกเรือไป 308 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":377,"choices":[477,387,377,1377],"_op":"sub","_a":685,"_b":308},{"text":"ห้องเก็บสินค้ามี 4 แถว แถวละ 160 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":640,"choices":[640,800,480,564],"_op":"mul","_a":160,"_b":4},{"text":"ลูฟี่เก็บเปลือกหอยได้ 392 ชิ้น แชงค์สเก็บเพิ่มให้อีก 316 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":708,"choices":[708,718,608,698],"_op":"add","_a":392,"_b":316},{"text":"ลูกเรือ 2 คน แต่ละคนได้รับค่าจ้างคนละ 322 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":644,"choices":[966,644,647,322],"_op":"mul","_a":322,"_b":2},{"text":"หมู่บ้านฟูชามีคนอยู่ 614 คน มีเด็กเกิดใหม่ 371 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":985,"choices":[995,975,885,985],"_op":"add","_a":614,"_b":371},{"text":"เรือออกเดินทางจากท่าแรก 290 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 135 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":425,"choices":[325,425,415,435],"_op":"add","_a":290,"_b":135},{"text":"คลังสมบัติมีเหรียญ 891 เบรี โจรงัดแงะไปได้ 226 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":665,"choices":[765,675,1665,665],"_op":"sub","_a":891,"_b":226},{"text":"หมู่บ้านฟูชาเก็บภาษีได้ 733 เบรี ใช้จ่ายซ่อมกำแพง 204 เบรี เหลือในคลังกี่เบรี?","ans":529,"choices":[1529,539,629,529],"_op":"sub","_a":733,"_b":204},{"text":"ลูฟี่มีเสบียง 667 กิโลกรัม แจกจ่ายให้ลูกเรือไป 253 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":414,"choices":[514,414,424,1414],"_op":"sub","_a":667,"_b":253},{"text":"กองทัพโจรภูเขาออกรบ 834 นาย กลับมา 418 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":416,"choices":[426,1416,516,416],"_op":"sub","_a":834,"_b":418},{"text":"เรือออกเดินทาง 859 ตัน ส่งสินค้าลงท่า 235 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":624,"choices":[634,724,624,1624],"_op":"sub","_a":859,"_b":235},{"text":"ลูฟี่ฝึกซ้อม 478 ครั้งต่อวัน ใน 6 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":2868,"choices":[3346,2972,2390,2868],"_op":"mul","_a":478,"_b":6},{"text":"ระยะทางจากต้นทางถึงปลายทาง 941 กิโลเมตร แชงค์สเดินมาแล้ว 383 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":558,"choices":[558,658,1558,568],"_op":"sub","_a":941,"_b":383},{"text":"ลูฟี่ฝึกซ้อม 218 ครั้งต่อวัน ใน 3 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":654,"choices":[436,872,654,645],"_op":"mul","_a":218,"_b":3},{"text":"โกดังเก็บสินค้า 834 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 143 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":977,"choices":[977,987,967,877],"_op":"add","_a":834,"_b":143},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 357 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 563 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":920,"choices":[910,930,820,920],"_op":"add","_a":357,"_b":563},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 383 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 122 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":505,"choices":[495,515,505,405],"_op":"add","_a":383,"_b":122},{"text":"ลูฟี่เก็บเปลือกหอยได้ 265 ชิ้น แชงค์สเก็บเพิ่มให้อีก 479 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":744,"choices":[754,744,644,734],"_op":"add","_a":265,"_b":479},{"text":"เรือออกเดินทาง 657 ตัน ส่งสินค้าลงท่า 138 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":519,"choices":[1519,519,619,529],"_op":"sub","_a":657,"_b":138},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 540 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 165 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":705,"choices":[695,705,715,605],"_op":"add","_a":540,"_b":165},{"text":"ลูฟี่มีลูกธนู 783 ดอก ยิงออกไป 207 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":576,"choices":[1576,676,586,576],"_op":"sub","_a":783,"_b":207},{"text":"เรือออกเดินทาง 917 ตัน ส่งสินค้าลงท่า 483 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":434,"choices":[1434,534,434,444],"_op":"sub","_a":917,"_b":483},{"text":"เรือออกเดินทาง 811 ตัน ส่งสินค้าลงท่า 112 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":699,"choices":[799,1699,699,709],"_op":"sub","_a":811,"_b":112},{"text":"เรือออกเดินทางจากท่าแรก 373 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 181 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":554,"choices":[564,554,544,454],"_op":"add","_a":373,"_b":181},{"text":"ลูฟี่เก็บเปลือกหอยได้ 327 ชิ้น แชงค์สเก็บเพิ่มให้อีก 202 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":529,"choices":[519,529,539,429],"_op":"add","_a":327,"_b":202},{"text":"แต่ละกล่องบรรจุเสบียง 328 กิโลกรัม มี 2 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":656,"choices":[984,656,328,680],"_op":"mul","_a":328,"_b":2},{"text":"หมู่บ้านฟูชาเก็บภาษีได้ 995 เบรี ใช้จ่ายซ่อมกำแพง 242 เบรี เหลือในคลังกี่เบรี?","ans":753,"choices":[753,763,1753,853],"_op":"sub","_a":995,"_b":242},{"text":"แชงค์สเดินทางวันแรก 128 กิโลเมตร วันที่สองเดิน 159 กิโลเมตร ระยะทางทั้งสองวันรวมกันเป็นกี่กิโลเมตร?","ans":287,"choices":[297,287,277,187],"_op":"add","_a":128,"_b":159},{"text":"กองเรือโจรภูเขามี 619 ลำ ถูกทำลายไป 127 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":492,"choices":[592,1492,502,492],"_op":"sub","_a":619,"_b":127},{"text":"เรือออกเดินทางจากท่าแรก 546 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 410 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":956,"choices":[946,856,956,966],"_op":"add","_a":546,"_b":410},{"text":"คลังหมู่บ้านฟูชามีเสบียง 360 กิโลกรัม รับของเพิ่มมาอีก 122 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":482,"choices":[482,382,492,472],"_op":"add","_a":360,"_b":122},{"text":"กองทัพโจรภูเขาออกรบ 786 นาย กลับมา 320 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":466,"choices":[1466,466,566,476],"_op":"sub","_a":786,"_b":320},{"text":"ระยะทางจากต้นทางถึงปลายทาง 939 กิโลเมตร แชงค์สเดินมาแล้ว 163 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":776,"choices":[776,786,876,1776],"_op":"sub","_a":939,"_b":163},{"text":"แชงค์สเดินทางวันแรก 434 กิโลเมตร วันที่สองเดิน 306 กิโลเมตร ระยะทางทั้งสองวันรวมกันเป็นกี่กิโลเมตร?","ans":740,"choices":[740,750,640,730],"_op":"add","_a":434,"_b":306},{"text":"เรือออกเดินทาง 940 ตัน ส่งสินค้าลงท่า 294 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":646,"choices":[646,656,746,1646],"_op":"sub","_a":940,"_b":294},{"text":"โกดังเก็บสินค้า 411 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 246 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":657,"choices":[657,667,557,647],"_op":"add","_a":411,"_b":246},{"text":"ลูฟี่เก็บเปลือกหอยได้ 576 ชิ้น แชงค์สเก็บเพิ่มให้อีก 326 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":902,"choices":[912,902,892,802],"_op":"add","_a":576,"_b":326},{"text":"เรือออกเดินทางจากท่าแรก 853 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 110 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":963,"choices":[953,963,863,973],"_op":"add","_a":853,"_b":110},{"text":"ระยะทางจากต้นทางถึงปลายทาง 647 กิโลเมตร แชงค์สเดินมาแล้ว 220 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":427,"choices":[527,437,427,1427],"_op":"sub","_a":647,"_b":220},{"text":"แต่ละกล่องบรรจุเสบียง 125 กิโลกรัม มี 2 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":250,"choices":[375,125,260,250],"_op":"mul","_a":125,"_b":2},{"text":"โกดังเก็บสินค้า 744 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 247 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":991,"choices":[1001,981,891,991],"_op":"add","_a":744,"_b":247},{"text":"คลังสมบัติมีเหรียญ 724 เบรี โจรงัดแงะไปได้ 175 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":549,"choices":[549,559,1549,649],"_op":"sub","_a":724,"_b":175},{"text":"ลูฟี่มีเสบียง 690 กิโลกรัม แจกจ่ายให้ลูกเรือไป 365 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":325,"choices":[1325,335,325,425],"_op":"sub","_a":690,"_b":365},{"text":"เดินทาง 3 วัน วันละ 968 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":2904,"choices":[2904,3872,2692,1936],"_op":"mul","_a":968,"_b":3},{"text":"คลังหมู่บ้านฟูชามีเสบียง 873 กิโลกรัม รับของเพิ่มมาอีก 114 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":987,"choices":[997,987,977,887],"_op":"add","_a":873,"_b":114},{"text":"โกดังเก็บสินค้า 560 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 232 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":792,"choices":[792,802,782,692],"_op":"add","_a":560,"_b":232},{"text":"ลูฟี่วิ่งได้ 741 เมตรต่อนาที วิ่งนาน 5 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":3705,"choices":[3711,2964,4446,3705],"_op":"mul","_a":741,"_b":5},{"text":"หมู่บ้านฟูชาเก็บภาษีได้ 720 เบรี ใช้จ่ายซ่อมกำแพง 239 เบรี เหลือในคลังกี่เบรี?","ans":481,"choices":[491,481,581,1481],"_op":"sub","_a":720,"_b":239},{"text":"แต่ละกล่องบรรจุเสบียง 241 กิโลกรัม มี 4 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":964,"choices":[1205,947,964,723],"_op":"mul","_a":241,"_b":4},{"text":"กองเรือโจรภูเขามี 632 ลำ ถูกทำลายไป 206 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":426,"choices":[426,436,1426,526],"_op":"sub","_a":632,"_b":206},{"text":"แต่ละกล่องบรรจุเสบียง 525 กิโลกรัม มี 2 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":1050,"choices":[525,1137,1050,1575],"_op":"mul","_a":525,"_b":2},{"text":"ลูฟี่เก็บเปลือกหอยได้ 883 ชิ้น แชงค์สเก็บเพิ่มให้อีก 112 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":995,"choices":[895,1005,995,985],"_op":"add","_a":883,"_b":112},{"text":"กองเรือโจรภูเขามี 985 ลำ ถูกทำลายไป 299 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":686,"choices":[1686,696,686,786],"_op":"sub","_a":985,"_b":299},{"text":"เดินทาง 8 วัน วันละ 379 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":3032,"choices":[3032,3411,2698,2653],"_op":"mul","_a":379,"_b":8},{"text":"ลูฟี่มีเสบียง 970 กิโลกรัม แจกจ่ายให้ลูกเรือไป 184 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":786,"choices":[886,786,1786,796],"_op":"sub","_a":970,"_b":184},{"text":"คลังสมบัติมีเหรียญ 801 เบรี โจรงัดแงะไปได้ 403 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":398,"choices":[398,498,1398,408],"_op":"sub","_a":801,"_b":403},{"text":"ลูฟี่เก็บเปลือกหอยได้ 238 ชิ้น แชงค์สเก็บเพิ่มให้อีก 543 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":781,"choices":[781,791,681,771],"_op":"add","_a":238,"_b":543},{"text":"โกดังเก็บสินค้า 488 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 267 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":755,"choices":[745,765,755,655],"_op":"add","_a":488,"_b":267},{"text":"ลูฟี่วิ่งได้ 879 เมตรต่อนาที วิ่งนาน 8 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":7032,"choices":[7729,7032,6153,7911],"_op":"mul","_a":879,"_b":8},{"text":"ลูกเรือ 2 คน แต่ละคนได้รับค่าจ้างคนละ 581 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":1162,"choices":[1743,1202,581,1162],"_op":"mul","_a":581,"_b":2},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 899 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 100 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":999,"choices":[999,989,1009,899],"_op":"add","_a":899,"_b":100},{"text":"ลูฟี่มีลูกธนู 918 ดอก ยิงออกไป 178 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":740,"choices":[740,840,750,1740],"_op":"sub","_a":918,"_b":178},{"text":"ลูฟี่มีเสบียง 888 กิโลกรัม แจกจ่ายให้ลูกเรือไป 211 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":677,"choices":[687,777,677,1677],"_op":"sub","_a":888,"_b":211},{"text":"เรือออกเดินทางจากท่าแรก 720 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 255 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":975,"choices":[965,985,975,875],"_op":"add","_a":720,"_b":255},{"text":"ระยะทางจากต้นทางถึงปลายทาง 896 กิโลเมตร แชงค์สเดินมาแล้ว 113 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":783,"choices":[1783,793,883,783],"_op":"sub","_a":896,"_b":113},{"text":"เรือ 5 ลำ ลำหนึ่งบรรทุกได้ 177 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":885,"choices":[885,708,957,1062],"_op":"mul","_a":177,"_b":5},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 679 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 300 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":979,"choices":[969,979,879,989],"_op":"add","_a":679,"_b":300},{"text":"เรือออกเดินทางจากท่าแรก 777 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 147 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":924,"choices":[934,914,824,924],"_op":"add","_a":777,"_b":147},{"text":"คลังหมู่บ้านฟูชามีเสบียง 601 กิโลกรัม รับของเพิ่มมาอีก 154 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":755,"choices":[745,755,655,765],"_op":"add","_a":601,"_b":154},{"text":"คลังหมู่บ้านฟูชามีเสบียง 824 กิโลกรัม รับของเพิ่มมาอีก 119 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":943,"choices":[953,943,933,843],"_op":"add","_a":824,"_b":119},{"text":"ลูฟี่เก็บเปลือกหอยได้ 730 ชิ้น แชงค์สเก็บเพิ่มให้อีก 237 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":967,"choices":[977,957,867,967],"_op":"add","_a":730,"_b":237},{"text":"เรือ 5 ลำ ลำหนึ่งบรรทุกได้ 430 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":2150,"choices":[2580,2177,1720,2150],"_op":"mul","_a":430,"_b":5},{"text":"คลังหมู่บ้านฟูชามีเสบียง 683 กิโลกรัม รับของเพิ่มมาอีก 256 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":939,"choices":[839,939,929,949],"_op":"add","_a":683,"_b":256},{"text":"ลูฟี่เก็บเปลือกหอยได้ 432 ชิ้น แชงค์สเก็บเพิ่มให้อีก 193 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":625,"choices":[625,525,615,635],"_op":"add","_a":432,"_b":193},{"text":"ลูฟี่วิ่งได้ 448 เมตรต่อนาที วิ่งนาน 6 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":2688,"choices":[3136,2240,2935,2688],"_op":"mul","_a":448,"_b":6}],"1":[{"text":"แต่ละกล่องบรรจุกระสุน 671 กิโลกรัม มี 8 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":5368,"choices":[5368,5794,4697,6039],"_op":"mul","_a":671,"_b":8},{"text":"ห้องเก็บสินค้ามี 48 แถว แถวละ 404 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":19392,"choices":[18988,19392,19796,4848],"_op":"mul","_a":404,"_b":48},{"text":"โกดังเก็บสินค้า 2,625 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 1,802 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":4427,"choices":[4417,3427,4327,4427],"_op":"add","_a":2625,"_b":1802},{"text":"เชลล์สทาวน์มีคนอยู่ 3,573 คน มีเด็กเกิดใหม่ 2,064 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":5637,"choices":[4637,5627,5637,5537],"_op":"add","_a":3573,"_b":2064},{"text":"เดินทาง 9 วัน วันละ 518 เมตร รวมระยะทางทั้งหมดกี่เมตร?","ans":4662,"choices":[5180,4699,4662,4144],"_op":"mul","_a":518,"_b":9},{"text":"เรือออกเดินทางจากท่าแรก 5,632 เมตร จากนั้นเบี่ยงเส้นทางอีก 3,819 เมตร เดินทางมาแล้วกี่เมตร?","ans":9451,"choices":[9451,8451,9351,9441],"_op":"add","_a":5632,"_b":3819},{"text":"ลูฟี่มีลูกธนู 8,465 ดอก ยิงออกไป 1,040 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":7425,"choices":[7435,7425,7525,8425],"_op":"sub","_a":8465,"_b":1040},{"text":"เรือออกเดินทาง 2,669 ตัน ส่งสินค้าลงท่า 222 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":2447,"choices":[2457,2547,2447,3447],"_op":"sub","_a":2669,"_b":222},{"text":"ลูฟี่เก็บเปลือกหอยได้ 8,195 ชิ้น โซโรเก็บเพิ่มให้อีก 354 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":8549,"choices":[8449,8539,7549,8549],"_op":"add","_a":8195,"_b":354},{"text":"เดินทาง 9 วัน วันละ 378 เมตร รวมระยะทางทั้งหมดกี่เมตร?","ans":3402,"choices":[3076,3780,3402,3024],"_op":"mul","_a":378,"_b":9},{"text":"ลูกเรือ 27 คน แต่ละคนได้รับค่าจ้างคนละ 718 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":19386,"choices":[19386,18668,6462,20104],"_op":"mul","_a":718,"_b":27},{"text":"ลูกเรือ 28 คน แต่ละคนได้รับค่าจ้างคนละ 883 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":24724,"choices":[23841,8830,25607,24724],"_op":"mul","_a":883,"_b":28},{"text":"กองเรือมอร์แกนมี 6,057 ลำ ถูกทำลายไป 843 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":5214,"choices":[5314,6214,5224,5214],"_op":"sub","_a":6057,"_b":843},{"text":"เชลล์สทาวน์เก็บภาษีได้ 7,200 เบรี ใช้จ่ายซ่อมกำแพง 1,772 เบรี เหลือในคลังกี่เบรี?","ans":5428,"choices":[5428,5528,5438,6428],"_op":"sub","_a":7200,"_b":1772},{"text":"กองเรือมอร์แกนมี 4,134 ลำ ถูกทำลายไป 1,450 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":2684,"choices":[2784,3684,2684,2694],"_op":"sub","_a":4134,"_b":1450},{"text":"เรือออกเดินทางจากท่าแรก 1,601 เมตร จากนั้นเบี่ยงเส้นทางอีก 3,825 เมตร เดินทางมาแล้วกี่เมตร?","ans":5426,"choices":[5416,5326,5426,4426],"_op":"add","_a":1601,"_b":3825},{"text":"ลูกเรือ 36 คน แต่ละคนได้รับค่าจ้างคนละ 218 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":7848,"choices":[1962,7848,8066,7630],"_op":"mul","_a":218,"_b":36},{"text":"เรือบรรทุกสินค้า 4,073 ตัน แวะท่าเรือรับสินค้าเพิ่ม 4,347 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":8420,"choices":[8320,8410,8420,7420],"_op":"add","_a":4073,"_b":4347},{"text":"โซโรเดินทางวันแรก 1,845 เมตร วันที่สองเดิน 1,767 เมตร ระยะทางทั้งสองวันรวมกันเป็นกี่เมตร?","ans":3612,"choices":[3512,3612,2612,3602],"_op":"add","_a":1845,"_b":1767},{"text":"เรือ 42 ลำ ลำหนึ่งบรรทุกได้ 815 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":34230,"choices":[35045,33415,34230,4890],"_op":"mul","_a":815,"_b":42},{"text":"ลูฟี่วิ่งได้ 826 เมตรต่อนาที วิ่งนาน 4 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":3304,"choices":[2478,4130,3472,3304],"_op":"mul","_a":826,"_b":4},{"text":"เรือออกเดินทางจากท่าแรก 2,527 เมตร จากนั้นเบี่ยงเส้นทางอีก 1,940 เมตร เดินทางมาแล้วกี่เมตร?","ans":4467,"choices":[4467,3467,4457,4367],"_op":"add","_a":2527,"_b":1940},{"text":"ลูฟี่วิ่งได้ 610 เมตรต่อนาที วิ่งนาน 6 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":3660,"choices":[3660,3646,3050,4270],"_op":"mul","_a":610,"_b":6},{"text":"เชลล์สทาวน์มีคนอยู่ 8,483 คน มีเด็กเกิดใหม่ 1,228 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9711,"choices":[8711,9701,9611,9711],"_op":"add","_a":8483,"_b":1228},{"text":"ลูฟี่วิ่งได้ 984 เมตรต่อนาที วิ่งนาน 3 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":2952,"choices":[2952,3936,1968,3022],"_op":"mul","_a":984,"_b":3},{"text":"ลูฟี่วิ่งได้ 940 เมตรต่อนาที วิ่งนาน 11 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":10340,"choices":[9400,11280,10340,1880],"_op":"mul","_a":940,"_b":11},{"text":"ลูฟี่มีเสบียง 3,934 กิโลกรัม แจกจ่ายให้ลูกเรือไป 1,929 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":2005,"choices":[2105,2015,2005,3005],"_op":"sub","_a":3934,"_b":1929},{"text":"แต่ละกล่องบรรจุกระสุน 566 กิโลกรัม มี 7 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":3962,"choices":[4528,3396,3962,4201],"_op":"mul","_a":566,"_b":7},{"text":"ลูกเรือ 8 คน แต่ละคนได้รับค่าจ้างคนละ 339 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":2712,"choices":[2373,2712,3051,2871],"_op":"mul","_a":339,"_b":8},{"text":"เชลล์สทาวน์มีคนอยู่ 9,115 คน มีเด็กเกิดใหม่ 137 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9252,"choices":[8252,9242,9152,9252],"_op":"add","_a":9115,"_b":137},{"text":"ลูฟี่เก็บเปลือกหอยได้ 2,633 ชิ้น โซโรเก็บเพิ่มให้อีก 4,408 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":7041,"choices":[6041,7031,6941,7041],"_op":"add","_a":2633,"_b":4408},{"text":"กองทัพมอร์แกนออกรบ 8,217 นาย กลับมา 1,364 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":6853,"choices":[6953,6853,7853,6863],"_op":"sub","_a":8217,"_b":1364},{"text":"เชลล์สทาวน์เก็บภาษีได้ 8,012 เบรี ใช้จ่ายซ่อมกำแพง 757 เบรี เหลือในคลังกี่เบรี?","ans":7255,"choices":[7265,8255,7355,7255],"_op":"sub","_a":8012,"_b":757},{"text":"เรือออกเดินทางจากท่าแรก 9,864 เมตร จากนั้นเบี่ยงเส้นทางอีก 102 เมตร เดินทางมาแล้วกี่เมตร?","ans":9966,"choices":[9866,8966,9966,9956],"_op":"add","_a":9864,"_b":102},{"text":"ห้องเก็บสินค้ามี 16 แถว แถวละ 332 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":5312,"choices":[2324,5644,4980,5312],"_op":"mul","_a":332,"_b":16},{"text":"ลูฟี่วิ่งได้ 554 เมตรต่อนาที วิ่งนาน 21 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":11634,"choices":[12188,11634,1662,11080],"_op":"mul","_a":554,"_b":21},{"text":"เรือบรรทุกสินค้า 1,919 ตัน แวะท่าเรือรับสินค้าเพิ่ม 2,503 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":4422,"choices":[4422,3422,4322,4412],"_op":"add","_a":1919,"_b":2503},{"text":"ลูฟี่ฝึกซ้อม 350 ครั้งต่อวัน ใน 8 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":2800,"choices":[2450,3150,2800,2638],"_op":"mul","_a":350,"_b":8},{"text":"เชลล์สทาวน์มีคนอยู่ 4,945 คน มีเด็กเกิดใหม่ 4,176 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9121,"choices":[9121,9021,9111,8121],"_op":"add","_a":4945,"_b":4176},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 8,529 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 622 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":9151,"choices":[9141,8151,9051,9151],"_op":"add","_a":8529,"_b":622},{"text":"ราคากระสุนชิ้นละ 175 เบรี ซื้อมา 39 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":6825,"choices":[7000,6825,2100,6650],"_op":"mul","_a":175,"_b":39},{"text":"โซโรเดินทางวันแรก 5,097 เมตร วันที่สองเดิน 3,842 เมตร ระยะทางทั้งสองวันรวมกันเป็นกี่เมตร?","ans":8939,"choices":[7939,8939,8839,8929],"_op":"add","_a":5097,"_b":3842},{"text":"คลังเชลล์สทาวน์มีเสบียง 2,747 กิโลกรัม รับของเพิ่มมาอีก 2,043 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":4790,"choices":[4690,4780,4790,3790],"_op":"add","_a":2747,"_b":2043},{"text":"ลูกเรือ 29 คน แต่ละคนได้รับค่าจ้างคนละ 816 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":23664,"choices":[22848,23664,8976,24480],"_op":"mul","_a":816,"_b":29},{"text":"ระยะทางจากต้นทางถึงปลายทาง 2,303 เมตร โซโรเดินมาแล้ว 1,117 เมตร อีกกี่เมตรถึงจะถึงจุดหมาย?","ans":1186,"choices":[1186,2186,1286,1196],"_op":"sub","_a":2303,"_b":1117},{"text":"โกดังเก็บสินค้า 4,588 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 5,315 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":9903,"choices":[9803,8903,9903,9893],"_op":"add","_a":4588,"_b":5315},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 2,591 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 5,240 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":7831,"choices":[7831,6831,7731,7821],"_op":"add","_a":2591,"_b":5240},{"text":"เรือออกเดินทาง 7,477 ตัน ส่งสินค้าลงท่า 3,099 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":4378,"choices":[4478,4388,5378,4378],"_op":"sub","_a":7477,"_b":3099},{"text":"ลูฟี่มีลูกธนู 8,307 ดอก ยิงออกไป 1,538 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":6769,"choices":[7769,6869,6779,6769],"_op":"sub","_a":8307,"_b":1538},{"text":"เรือออกเดินทาง 9,721 ตัน ส่งสินค้าลงท่า 2,332 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":7389,"choices":[8389,7399,7489,7389],"_op":"sub","_a":9721,"_b":2332},{"text":"เรือ 32 ลำ ลำหนึ่งบรรทุกได้ 864 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":27648,"choices":[28512,4320,27648,26784],"_op":"mul","_a":864,"_b":32},{"text":"เชลล์สทาวน์เก็บภาษีได้ 5,196 เบรี ใช้จ่ายซ่อมกำแพง 1,727 เบรี เหลือในคลังกี่เบรี?","ans":3469,"choices":[4469,3479,3469,3569],"_op":"sub","_a":5196,"_b":1727},{"text":"เรือออกเดินทางจากท่าแรก 5,332 เมตร จากนั้นเบี่ยงเส้นทางอีก 4,495 เมตร เดินทางมาแล้วกี่เมตร?","ans":9827,"choices":[8827,9827,9817,9727],"_op":"add","_a":5332,"_b":4495},{"text":"ราคากระสุนชิ้นละ 698 เบรี ซื้อมา 35 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":24430,"choices":[23732,5584,24430,25128],"_op":"mul","_a":698,"_b":35},{"text":"ราคากระสุนชิ้นละ 582 เบรี ซื้อมา 2 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":1164,"choices":[582,1746,1164,1138],"_op":"mul","_a":582,"_b":2},{"text":"คลังเชลล์สทาวน์มีเสบียง 5,951 กิโลกรัม รับของเพิ่มมาอีก 2,759 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":8710,"choices":[8700,8710,7710,8610],"_op":"add","_a":5951,"_b":2759},{"text":"ลูฟี่เก็บเปลือกหอยได้ 1,609 ชิ้น โซโรเก็บเพิ่มให้อีก 2,593 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":4202,"choices":[4202,4102,3202,4192],"_op":"add","_a":1609,"_b":2593},{"text":"ห้องเก็บสินค้ามี 19 แถว แถวละ 650 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":12350,"choices":[13000,12350,11700,6500],"_op":"mul","_a":650,"_b":19},{"text":"ห้องเก็บสินค้ามี 4 แถว แถวละ 701 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":2804,"choices":[2103,2804,3138,3505],"_op":"mul","_a":701,"_b":4},{"text":"เชลล์สทาวน์เก็บภาษีได้ 6,083 เบรี ใช้จ่ายซ่อมกำแพง 234 เบรี เหลือในคลังกี่เบรี?","ans":5849,"choices":[5849,6849,5949,5859],"_op":"sub","_a":6083,"_b":234},{"text":"เรือ 7 ลำ ลำหนึ่งบรรทุกได้ 341 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":2387,"choices":[2046,2387,2728,2477],"_op":"mul","_a":341,"_b":7},{"text":"เรือ 5 ลำ ลำหนึ่งบรรทุกได้ 382 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":1910,"choices":[2115,2292,1528,1910],"_op":"mul","_a":382,"_b":5},{"text":"เรือบรรทุกสินค้า 1,349 ตัน แวะท่าเรือรับสินค้าเพิ่ม 514 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":1863,"choices":[1863,863,1763,1853],"_op":"add","_a":1349,"_b":514},{"text":"ลูฟี่มีลูกธนู 2,624 ดอก ยิงออกไป 1,235 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":1389,"choices":[1389,1399,1489,2389],"_op":"sub","_a":2624,"_b":1235},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 3,417 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 4,982 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":8399,"choices":[7399,8399,8299,8389],"_op":"add","_a":3417,"_b":4982},{"text":"เชลล์สทาวน์มีคนอยู่ 9,850 คน มีเด็กเกิดใหม่ 116 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9966,"choices":[9956,8966,9966,9866],"_op":"add","_a":9850,"_b":116},{"text":"เรือบรรทุกสินค้า 3,159 ตัน แวะท่าเรือรับสินค้าเพิ่ม 221 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":3380,"choices":[3280,2380,3380,3370],"_op":"add","_a":3159,"_b":221},{"text":"ระยะทางจากต้นทางถึงปลายทาง 1,758 เมตร โซโรเดินมาแล้ว 278 เมตร อีกกี่เมตรถึงจะถึงจุดหมาย?","ans":1480,"choices":[1580,1490,2480,1480],"_op":"sub","_a":1758,"_b":278},{"text":"เรือ 18 ลำ ลำหนึ่งบรรทุกได้ 638 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":11484,"choices":[5742,11484,12122,10846],"_op":"mul","_a":638,"_b":18},{"text":"กองทัพมอร์แกนออกรบ 9,908 นาย กลับมา 4,963 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":4945,"choices":[4955,4945,5045,5945],"_op":"sub","_a":9908,"_b":4963},{"text":"ระยะทางจากต้นทางถึงปลายทาง 2,210 เมตร โซโรเดินมาแล้ว 1,167 เมตร อีกกี่เมตรถึงจะถึงจุดหมาย?","ans":1043,"choices":[1043,2043,1053,1143],"_op":"sub","_a":2210,"_b":1167},{"text":"กองเรือมอร์แกนมี 2,496 ลำ ถูกทำลายไป 1,080 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":1416,"choices":[1426,1416,1516,2416],"_op":"sub","_a":2496,"_b":1080},{"text":"กองทัพมอร์แกนออกรบ 9,532 นาย กลับมา 3,733 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":5799,"choices":[5899,5799,5809,6799],"_op":"sub","_a":9532,"_b":3733},{"text":"ลูฟี่วิ่งได้ 167 เมตรต่อนาที วิ่งนาน 4 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":668,"choices":[835,747,668,501],"_op":"mul","_a":167,"_b":4},{"text":"กองเรือมอร์แกนมี 8,933 ลำ ถูกทำลายไป 4,241 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":4692,"choices":[4692,4702,5692,4792],"_op":"sub","_a":8933,"_b":4241},{"text":"ลูฟี่มีเสบียง 5,022 กิโลกรัม แจกจ่ายให้ลูกเรือไป 1,861 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":3161,"choices":[4161,3171,3261,3161],"_op":"sub","_a":5022,"_b":1861},{"text":"ห้องเก็บสินค้ามี 9 แถว แถวละ 947 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":8523,"choices":[8352,9470,8523,7576],"_op":"mul","_a":947,"_b":9},{"text":"ราคากระสุนชิ้นละ 420 เบรี ซื้อมา 6 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":2520,"choices":[2940,2100,2520,2374],"_op":"mul","_a":420,"_b":6},{"text":"เรือ 16 ลำ ลำหนึ่งบรรทุกได้ 951 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":15216,"choices":[6657,14265,15216,16167],"_op":"mul","_a":951,"_b":16},{"text":"คลังสมบัติมีเหรียญ 3,631 เบรี โจรงัดแงะไปได้ 1,239 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":2392,"choices":[2402,2392,2492,3392],"_op":"sub","_a":3631,"_b":1239},{"text":"ห้องเก็บสินค้ามี 7 แถว แถวละ 520 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":3640,"choices":[3942,4160,3120,3640],"_op":"mul","_a":520,"_b":7},{"text":"ลูฟี่มีลูกธนู 7,261 ดอก ยิงออกไป 524 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":6737,"choices":[6737,7737,6837,6747],"_op":"sub","_a":7261,"_b":524},{"text":"เชลล์สทาวน์เก็บภาษีได้ 5,174 เบรี ใช้จ่ายซ่อมกำแพง 543 เบรี เหลือในคลังกี่เบรี?","ans":4631,"choices":[4631,4731,4641,5631],"_op":"sub","_a":5174,"_b":543},{"text":"คลังสมบัติมีเหรียญ 5,205 เบรี โจรงัดแงะไปได้ 1,857 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":3348,"choices":[4348,3358,3448,3348],"_op":"sub","_a":5205,"_b":1857},{"text":"เรือบรรทุกสินค้า 5,477 ตัน แวะท่าเรือรับสินค้าเพิ่ม 2,631 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":8108,"choices":[8098,8108,8008,7108],"_op":"add","_a":5477,"_b":2631},{"text":"กองเรือมอร์แกนมี 3,847 ลำ ถูกทำลายไป 1,259 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":2588,"choices":[2588,3588,2598,2688],"_op":"sub","_a":3847,"_b":1259},{"text":"โกดังเก็บสินค้า 2,503 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 4,445 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":6948,"choices":[6848,6948,6938,5948],"_op":"add","_a":2503,"_b":4445},{"text":"เรือบรรทุกสินค้า 6,585 ตัน แวะท่าเรือรับสินค้าเพิ่ม 744 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":7329,"choices":[7329,6329,7319,7229],"_op":"add","_a":6585,"_b":744},{"text":"เรือออกเดินทาง 2,891 ตัน ส่งสินค้าลงท่า 207 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":2684,"choices":[2694,2784,3684,2684],"_op":"sub","_a":2891,"_b":207},{"text":"ลูฟี่วิ่งได้ 790 เมตรต่อนาที วิ่งนาน 16 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":12640,"choices":[12640,11850,13430,5530],"_op":"mul","_a":790,"_b":16},{"text":"เดินทาง 49 วัน วันละ 597 เมตร รวมระยะทางทั้งหมดกี่เมตร?","ans":29253,"choices":[29850,28656,7761,29253],"_op":"mul","_a":597,"_b":49},{"text":"ราคากระสุนชิ้นละ 873 เบรี ซื้อมา 3 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":2619,"choices":[3492,2619,1746,2745],"_op":"mul","_a":873,"_b":3},{"text":"ลูกเรือ 30 คน แต่ละคนได้รับค่าจ้างคนละ 639 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":19170,"choices":[18531,19809,1917,19170],"_op":"mul","_a":639,"_b":30},{"text":"ลูฟี่วิ่งได้ 107 เมตรต่อนาที วิ่งนาน 24 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":2568,"choices":[2675,2461,2568,642],"_op":"mul","_a":107,"_b":24},{"text":"เรือ 7 ลำ ลำหนึ่งบรรทุกได้ 396 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":2772,"choices":[2376,3168,2772,2447],"_op":"mul","_a":396,"_b":7},{"text":"ห้องเก็บสินค้ามี 4 แถว แถวละ 279 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":1116,"choices":[1100,1116,1395,837],"_op":"mul","_a":279,"_b":4},{"text":"คลังสมบัติมีเหรียญ 2,193 เบรี โจรงัดแงะไปได้ 993 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":1200,"choices":[1300,1210,1200,2200],"_op":"sub","_a":2193,"_b":993},{"text":"ห้องเก็บสินค้ามี 38 แถว แถวละ 689 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":26182,"choices":[26182,7579,25493,26871],"_op":"mul","_a":689,"_b":38},{"text":"เชลล์สทาวน์เก็บภาษีได้ 8,136 เบรี ใช้จ่ายซ่อมกำแพง 270 เบรี เหลือในคลังกี่เบรี?","ans":7866,"choices":[8866,7966,7876,7866],"_op":"sub","_a":8136,"_b":270},{"text":"คลังเชลล์สทาวน์มีเสบียง 6,928 กิโลกรัม รับของเพิ่มมาอีก 460 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":7388,"choices":[6388,7378,7388,7288],"_op":"add","_a":6928,"_b":460}],"2":[{"text":"เรือ 32 ลำ ลำหนึ่งบรรทุกได้ 167 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":5344,"choices":[5344,835,5177,5511],"_op":"mul","_a":167,"_b":32},{"text":"กองทัพลูฟี่ออกรบ 3,963 นาย กลับมา 1,465 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":2498,"choices":[3498,2508,2598,2498],"_op":"sub","_a":3963,"_b":1465},{"text":"กองทัพลูฟี่ออกรบ 7,921 นาย กลับมา 1,156 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":6765,"choices":[6865,7765,6775,6765],"_op":"sub","_a":7921,"_b":1156},{"text":"ออเรนจ์ทาวน์มีคนอยู่ 6,381 คน มีเด็กเกิดใหม่ 3,430 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9811,"choices":[9711,9801,9811,8811],"_op":"add","_a":6381,"_b":3430},{"text":"ลูกเรือ 34 คน แต่ละคนได้รับค่าจ้างคนละ 620 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":21080,"choices":[20460,21080,4340,21700],"_op":"mul","_a":620,"_b":34},{"text":"นามิเก็บเปลือกหอยได้ 4,509 ชิ้น บากี้เก็บเพิ่มให้อีก 2,899 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":7408,"choices":[7398,7308,7408,6408],"_op":"add","_a":4509,"_b":2899},{"text":"บากี้เดินทางวันแรก 3,538 กิโลเมตร วันที่สองเดิน 732 กิโลเมตร ระยะทางทั้งสองวันรวมกันเป็นกี่กิโลเมตร?","ans":4270,"choices":[4260,4270,3270,4170],"_op":"add","_a":3538,"_b":732},{"text":"ออเรนจ์ทาวน์มีคนอยู่ 6,517 คน มีเด็กเกิดใหม่ 3,238 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9755,"choices":[9755,8755,9745,9655],"_op":"add","_a":6517,"_b":3238},{"text":"เดินทาง 21 วัน วันละ 285 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":5985,"choices":[855,6270,5700,5985],"_op":"mul","_a":285,"_b":21},{"text":"เดินทาง 26 วัน วันละ 792 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":20592,"choices":[20592,19800,6336,21384],"_op":"mul","_a":792,"_b":26},{"text":"แต่ละกล่องบรรจุสมบัติ 339 กิโลกรัม มี 45 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":15255,"choices":[15255,15594,3051,14916],"_op":"mul","_a":339,"_b":45},{"text":"นามิมีเสบียง 7,526 กิโลกรัม แจกจ่ายให้ลูกเรือไป 2,878 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":4648,"choices":[4648,4658,5648,4748],"_op":"sub","_a":7526,"_b":2878},{"text":"ห้องเก็บสินค้ามี 44 แถว แถวละ 614 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":27016,"choices":[4912,27630,27016,26402],"_op":"mul","_a":614,"_b":44},{"text":"นามิเก็บเปลือกหอยได้ 5,096 ชิ้น บากี้เก็บเพิ่มให้อีก 527 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":5623,"choices":[4623,5523,5623,5613],"_op":"add","_a":5096,"_b":527},{"text":"เรือ 44 ลำ ลำหนึ่งบรรทุกได้ 828 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":36432,"choices":[37260,6624,36432,35604],"_op":"mul","_a":828,"_b":44},{"text":"นามิฝึกซ้อม 379 ครั้งต่อวัน ใน 39 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":14781,"choices":[14402,4548,15160,14781],"_op":"mul","_a":379,"_b":39},{"text":"นามินับเงินในกระเป๋าได้ 8,391 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 815 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":9206,"choices":[9206,9196,9106,8206],"_op":"add","_a":8391,"_b":815},{"text":"โกดังเก็บสินค้า 9,224 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 482 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":9706,"choices":[8706,9706,9696,9606],"_op":"add","_a":9224,"_b":482},{"text":"ออเรนจ์ทาวน์เก็บภาษีได้ 5,178 เบรี ใช้จ่ายซ่อมกำแพง 215 เบรี เหลือในคลังกี่เบรี?","ans":4963,"choices":[5063,4963,4973,5963],"_op":"sub","_a":5178,"_b":215},{"text":"นามิฝึกซ้อม 910 ครั้งต่อวัน ใน 20 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":18200,"choices":[19110,1820,17290,18200],"_op":"mul","_a":910,"_b":20},{"text":"เดินทาง 19 วัน วันละ 812 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":15428,"choices":[15428,14616,16240,8120],"_op":"mul","_a":812,"_b":19},{"text":"ระยะทางจากต้นทางถึงปลายทาง 2,798 กิโลเมตร บากี้เดินมาแล้ว 138 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":2660,"choices":[2670,3660,2760,2660],"_op":"sub","_a":2798,"_b":138},{"text":"ระยะทางจากต้นทางถึงปลายทาง 3,321 กิโลเมตร บากี้เดินมาแล้ว 1,689 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":1632,"choices":[2632,1632,1732,1642],"_op":"sub","_a":3321,"_b":1689},{"text":"กองเรือลูฟี่มี 2,282 ลำ ถูกทำลายไป 588 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":1694,"choices":[1794,2694,1704,1694],"_op":"sub","_a":2282,"_b":588},{"text":"ลูกเรือ 42 คน แต่ละคนได้รับค่าจ้างคนละ 956 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":40152,"choices":[39196,40152,5736,41108],"_op":"mul","_a":956,"_b":42},{"text":"ลูกเรือ 38 คน แต่ละคนได้รับค่าจ้างคนละ 398 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":15124,"choices":[14726,4378,15522,15124],"_op":"mul","_a":398,"_b":38},{"text":"ออเรนจ์ทาวน์เก็บภาษีได้ 4,568 เบรี ใช้จ่ายซ่อมกำแพง 450 เบรี เหลือในคลังกี่เบรี?","ans":4118,"choices":[4218,4118,5118,4128],"_op":"sub","_a":4568,"_b":450},{"text":"ลูกเรือ 41 คน แต่ละคนได้รับค่าจ้างคนละ 499 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":20459,"choices":[19960,20958,20459,2495],"_op":"mul","_a":499,"_b":41},{"text":"เรือออกเดินทางจากท่าแรก 1,266 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 3,025 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":4291,"choices":[4291,4191,4281,3291],"_op":"add","_a":1266,"_b":3025},{"text":"ราคาสมบัติชิ้นละ 890 เบรี ซื้อมา 48 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":42720,"choices":[43610,41830,42720,10680],"_op":"mul","_a":890,"_b":48},{"text":"ออเรนจ์ทาวน์มีคนอยู่ 6,546 คน มีเด็กเกิดใหม่ 3,432 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9978,"choices":[9968,9978,8978,9878],"_op":"add","_a":6546,"_b":3432},{"text":"นามิฝึกซ้อม 746 ครั้งต่อวัน ใน 22 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":16412,"choices":[17158,15666,16412,2984],"_op":"mul","_a":746,"_b":22},{"text":"โกดังเก็บสินค้า 1,605 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 2,503 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":4108,"choices":[4098,4108,3108,4008],"_op":"add","_a":1605,"_b":2503},{"text":"คลังออเรนจ์ทาวน์มีเสบียง 6,170 กิโลกรัม รับของเพิ่มมาอีก 1,370 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":7540,"choices":[7530,7440,6540,7540],"_op":"add","_a":6170,"_b":1370},{"text":"ออเรนจ์ทาวน์เก็บภาษีได้ 4,631 เบรี ใช้จ่ายซ่อมกำแพง 1,271 เบรี เหลือในคลังกี่เบรี?","ans":3360,"choices":[3460,4360,3370,3360],"_op":"sub","_a":4631,"_b":1271},{"text":"ออเรนจ์ทาวน์เก็บภาษีได้ 5,976 เบรี ใช้จ่ายซ่อมกำแพง 609 เบรี เหลือในคลังกี่เบรี?","ans":5367,"choices":[5377,5467,6367,5367],"_op":"sub","_a":5976,"_b":609},{"text":"เรือออกเดินทาง 7,834 ตัน ส่งสินค้าลงท่า 2,877 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":4957,"choices":[5057,5957,4957,4967],"_op":"sub","_a":7834,"_b":2877},{"text":"ระยะทางจากต้นทางถึงปลายทาง 7,518 กิโลเมตร บากี้เดินมาแล้ว 3,885 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":3633,"choices":[4633,3643,3733,3633],"_op":"sub","_a":7518,"_b":3885},{"text":"นามิฝึกซ้อม 180 ครั้งต่อวัน ใน 38 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":6840,"choices":[7020,6840,1980,6660],"_op":"mul","_a":180,"_b":38},{"text":"ระยะทางจากต้นทางถึงปลายทาง 2,811 กิโลเมตร บากี้เดินมาแล้ว 771 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":2040,"choices":[2040,2140,2050,3040],"_op":"sub","_a":2811,"_b":771},{"text":"ออเรนจ์ทาวน์เก็บภาษีได้ 4,230 เบรี ใช้จ่ายซ่อมกำแพง 1,918 เบรี เหลือในคลังกี่เบรี?","ans":2312,"choices":[2412,2322,2312,3312],"_op":"sub","_a":4230,"_b":1918},{"text":"นามิวิ่งได้ 729 เมตรต่อนาที วิ่งนาน 38 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":27702,"choices":[27702,26973,28431,8019],"_op":"mul","_a":729,"_b":38},{"text":"ออเรนจ์ทาวน์มีคนอยู่ 6,952 คน มีเด็กเกิดใหม่ 2,201 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9153,"choices":[9053,8153,9143,9153],"_op":"add","_a":6952,"_b":2201},{"text":"เรือ 19 ลำ ลำหนึ่งบรรทุกได้ 135 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":2565,"choices":[1350,2430,2565,2700],"_op":"mul","_a":135,"_b":19},{"text":"คลังสมบัติมีเหรียญ 7,433 เบรี โจรงัดแงะไปได้ 1,668 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":5765,"choices":[6765,5775,5765,5865],"_op":"sub","_a":7433,"_b":1668},{"text":"เดินทาง 34 วัน วันละ 479 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":16286,"choices":[16765,15807,16286,3353],"_op":"mul","_a":479,"_b":34},{"text":"คลังออเรนจ์ทาวน์มีเสบียง 9,674 กิโลกรัม รับของเพิ่มมาอีก 193 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":9867,"choices":[9857,9867,9767,8867],"_op":"add","_a":9674,"_b":193},{"text":"คลังสมบัติมีเหรียญ 5,589 เบรี โจรงัดแงะไปได้ 564 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":5025,"choices":[5025,5035,5125,6025],"_op":"sub","_a":5589,"_b":564},{"text":"บากี้เดินทางวันแรก 2,929 กิโลเมตร วันที่สองเดิน 2,244 กิโลเมตร ระยะทางทั้งสองวันรวมกันเป็นกี่กิโลเมตร?","ans":5173,"choices":[4173,5163,5073,5173],"_op":"add","_a":2929,"_b":2244},{"text":"แต่ละกล่องบรรจุสมบัติ 810 กิโลกรัม มี 42 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":34020,"choices":[33210,34020,34830,4860],"_op":"mul","_a":810,"_b":42},{"text":"นามิเก็บเปลือกหอยได้ 8,406 ชิ้น บากี้เก็บเพิ่มให้อีก 453 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":8859,"choices":[8759,8859,7859,8849],"_op":"add","_a":8406,"_b":453},{"text":"เรือ 33 ลำ ลำหนึ่งบรรทุกได้ 783 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":25839,"choices":[25839,25056,4698,26622],"_op":"mul","_a":783,"_b":33},{"text":"โกดังเก็บสินค้า 3,852 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 3,061 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":6913,"choices":[6813,5913,6903,6913],"_op":"add","_a":3852,"_b":3061},{"text":"ลูกเรือ 42 คน แต่ละคนได้รับค่าจ้างคนละ 342 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":14364,"choices":[14706,14364,14022,2052],"_op":"mul","_a":342,"_b":42},{"text":"นามิฝึกซ้อม 578 ครั้งต่อวัน ใน 46 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":26588,"choices":[26588,26010,27166,5780],"_op":"mul","_a":578,"_b":46},{"text":"คลังออเรนจ์ทาวน์มีเสบียง 7,523 กิโลกรัม รับของเพิ่มมาอีก 2,060 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":9583,"choices":[9483,8583,9573,9583],"_op":"add","_a":7523,"_b":2060},{"text":"กองทัพลูฟี่ออกรบ 3,553 นาย กลับมา 749 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":2804,"choices":[2904,2804,3804,2814],"_op":"sub","_a":3553,"_b":749},{"text":"ออเรนจ์ทาวน์มีคนอยู่ 3,102 คน มีเด็กเกิดใหม่ 4,616 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":7718,"choices":[7708,6718,7718,7618],"_op":"add","_a":3102,"_b":4616},{"text":"นามิฝึกซ้อม 951 ครั้งต่อวัน ใน 18 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":17118,"choices":[18069,16167,8559,17118],"_op":"mul","_a":951,"_b":18},{"text":"ราคาสมบัติชิ้นละ 430 เบรี ซื้อมา 25 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":10750,"choices":[10750,3010,10320,11180],"_op":"mul","_a":430,"_b":25},{"text":"นามิวิ่งได้ 301 เมตรต่อนาที วิ่งนาน 46 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":13846,"choices":[13545,13846,14147,3010],"_op":"mul","_a":301,"_b":46},{"text":"เรือ 45 ลำ ลำหนึ่งบรรทุกได้ 729 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":32805,"choices":[33534,6561,32805,32076],"_op":"mul","_a":729,"_b":45},{"text":"ราคาสมบัติชิ้นละ 275 เบรี ซื้อมา 49 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":13475,"choices":[13475,13750,3575,13200],"_op":"mul","_a":275,"_b":49},{"text":"บากี้เดินทางวันแรก 1,744 กิโลเมตร วันที่สองเดิน 5,354 กิโลเมตร ระยะทางทั้งสองวันรวมกันเป็นกี่กิโลเมตร?","ans":7098,"choices":[7088,6998,7098,6098],"_op":"add","_a":1744,"_b":5354},{"text":"ระยะทางจากต้นทางถึงปลายทาง 1,996 กิโลเมตร บากี้เดินมาแล้ว 609 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":1387,"choices":[1487,2387,1387,1397],"_op":"sub","_a":1996,"_b":609},{"text":"นามิวิ่งได้ 924 เมตรต่อนาที วิ่งนาน 36 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":33264,"choices":[34188,32340,33264,8316],"_op":"mul","_a":924,"_b":36},{"text":"กองเรือลูฟี่มี 4,089 ลำ ถูกทำลายไป 1,900 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":2189,"choices":[2189,2289,3189,2199],"_op":"sub","_a":4089,"_b":1900},{"text":"เรือออกเดินทาง 7,073 ตัน ส่งสินค้าลงท่า 2,584 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":4489,"choices":[5489,4489,4589,4499],"_op":"sub","_a":7073,"_b":2584},{"text":"เรือออกเดินทาง 7,158 ตัน ส่งสินค้าลงท่า 1,733 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":5425,"choices":[5435,5425,6425,5525],"_op":"sub","_a":7158,"_b":1733},{"text":"นามิมีเสบียง 6,728 กิโลกรัม แจกจ่ายให้ลูกเรือไป 1,090 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":5638,"choices":[5638,6638,5738,5648],"_op":"sub","_a":6728,"_b":1090},{"text":"เรือ 20 ลำ ลำหนึ่งบรรทุกได้ 353 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":7060,"choices":[7413,7060,6707,706],"_op":"mul","_a":353,"_b":20},{"text":"แต่ละกล่องบรรจุสมบัติ 984 กิโลกรัม มี 37 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":36408,"choices":[36408,35424,9840,37392],"_op":"mul","_a":984,"_b":37},{"text":"เดินทาง 21 วัน วันละ 294 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":6174,"choices":[5880,6468,882,6174],"_op":"mul","_a":294,"_b":21},{"text":"เรือออกเดินทางจากท่าแรก 9,148 กิโลเมตร จากนั้นเบี่ยงเส้นทางอีก 123 กิโลเมตร เดินทางมาแล้วกี่กิโลเมตร?","ans":9271,"choices":[9171,9261,8271,9271],"_op":"add","_a":9148,"_b":123},{"text":"เรือบรรทุกสินค้า 4,944 ตัน แวะท่าเรือรับสินค้าเพิ่ม 1,862 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":6806,"choices":[6796,5806,6806,6706],"_op":"add","_a":4944,"_b":1862},{"text":"นามิเก็บเปลือกหอยได้ 9,108 ชิ้น บากี้เก็บเพิ่มให้อีก 711 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":9819,"choices":[9809,8819,9719,9819],"_op":"add","_a":9108,"_b":711},{"text":"เรือออกเดินทาง 3,261 ตัน ส่งสินค้าลงท่า 982 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":2279,"choices":[2289,3279,2279,2379],"_op":"sub","_a":3261,"_b":982},{"text":"ราคาสมบัติชิ้นละ 882 เบรี ซื้อมา 36 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":31752,"choices":[7938,30870,32634,31752],"_op":"mul","_a":882,"_b":36},{"text":"บากี้เดินทางวันแรก 4,189 กิโลเมตร วันที่สองเดิน 3,069 กิโลเมตร ระยะทางทั้งสองวันรวมกันเป็นกี่กิโลเมตร?","ans":7258,"choices":[7158,6258,7258,7248],"_op":"add","_a":4189,"_b":3069},{"text":"กองทัพลูฟี่ออกรบ 6,082 นาย กลับมา 2,652 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":3430,"choices":[3530,3430,3440,4430],"_op":"sub","_a":6082,"_b":2652},{"text":"เรือบรรทุกสินค้า 7,114 ตัน แวะท่าเรือรับสินค้าเพิ่ม 1,488 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":8602,"choices":[8602,8502,8592,7602],"_op":"add","_a":7114,"_b":1488},{"text":"ลูกเรือ 13 คน แต่ละคนได้รับค่าจ้างคนละ 612 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":7956,"choices":[7956,2448,8568,7344],"_op":"mul","_a":612,"_b":13},{"text":"นามิมีเสบียง 9,261 กิโลกรัม แจกจ่ายให้ลูกเรือไป 4,354 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":4907,"choices":[5007,5907,4917,4907],"_op":"sub","_a":9261,"_b":4354},{"text":"เรือบรรทุกสินค้า 6,373 ตัน แวะท่าเรือรับสินค้าเพิ่ม 2,611 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":8984,"choices":[8984,8884,8974,7984],"_op":"add","_a":6373,"_b":2611},{"text":"เดินทาง 32 วัน วันละ 707 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":22624,"choices":[3535,22624,23331,21917],"_op":"mul","_a":707,"_b":32},{"text":"เรือ 32 ลำ ลำหนึ่งบรรทุกได้ 477 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":15264,"choices":[15264,2385,14787,15741],"_op":"mul","_a":477,"_b":32},{"text":"นามิเก็บเปลือกหอยได้ 1,436 ชิ้น บากี้เก็บเพิ่มให้อีก 4,989 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":6425,"choices":[6325,6425,6415,5425],"_op":"add","_a":1436,"_b":4989},{"text":"เดินทาง 14 วัน วันละ 838 กิโลเมตร รวมระยะทางทั้งหมดกี่กิโลเมตร?","ans":11732,"choices":[4190,10894,11732,12570],"_op":"mul","_a":838,"_b":14},{"text":"ลูกเรือ 26 คน แต่ละคนได้รับค่าจ้างคนละ 251 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":6526,"choices":[6777,6275,6526,2008],"_op":"mul","_a":251,"_b":26},{"text":"คลังออเรนจ์ทาวน์มีเสบียง 8,225 กิโลกรัม รับของเพิ่มมาอีก 742 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":8967,"choices":[8957,8867,8967,7967],"_op":"add","_a":8225,"_b":742},{"text":"นามิเก็บเปลือกหอยได้ 7,723 ชิ้น บากี้เก็บเพิ่มให้อีก 2,155 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":9878,"choices":[9868,9878,8878,9778],"_op":"add","_a":7723,"_b":2155},{"text":"ออเรนจ์ทาวน์เก็บภาษีได้ 9,998 เบรี ใช้จ่ายซ่อมกำแพง 1,798 เบรี เหลือในคลังกี่เบรี?","ans":8200,"choices":[8200,9200,8210,8300],"_op":"sub","_a":9998,"_b":1798},{"text":"นามิเก็บเปลือกหอยได้ 6,140 ชิ้น บากี้เก็บเพิ่มให้อีก 809 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":6949,"choices":[6849,5949,6949,6939],"_op":"add","_a":6140,"_b":809},{"text":"นามิมีเสบียง 5,831 กิโลกรัม แจกจ่ายให้ลูกเรือไป 2,598 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":3233,"choices":[3243,3333,3233,4233],"_op":"sub","_a":5831,"_b":2598},{"text":"ระยะทางจากต้นทางถึงปลายทาง 6,390 กิโลเมตร บากี้เดินมาแล้ว 1,021 กิโลเมตร อีกกี่กิโลเมตรถึงจะถึงจุดหมาย?","ans":5369,"choices":[5369,6369,5469,5379],"_op":"sub","_a":6390,"_b":1021},{"text":"นามิมีเสบียง 9,511 กิโลกรัม แจกจ่ายให้ลูกเรือไป 2,697 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":6814,"choices":[6824,6914,6814,7814],"_op":"sub","_a":9511,"_b":2697},{"text":"คลังออเรนจ์ทาวน์มีเสบียง 5,715 กิโลกรัม รับของเพิ่มมาอีก 1,098 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":6813,"choices":[6813,6713,6803,5813],"_op":"add","_a":5715,"_b":1098},{"text":"นามิวิ่งได้ 397 เมตรต่อนาที วิ่งนาน 13 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":5161,"choices":[5558,4764,5161,1588],"_op":"mul","_a":397,"_b":13},{"text":"นามิมีลูกธนู 5,701 ดอก ยิงออกไป 2,062 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":3639,"choices":[3649,3639,4639,3739],"_op":"sub","_a":5701,"_b":2062},{"text":"นามิฝึกซ้อม 675 ครั้งต่อวัน ใน 28 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":18900,"choices":[18900,19575,6750,18225],"_op":"mul","_a":675,"_b":28}],"3":[{"text":"ไซรัปวิลเลจเก็บภาษีได้ 5,785 เบรี ใช้จ่ายซ่อมกำแพง 2,777 เบรี เหลือในคลังกี่เบรี?","ans":3008,"choices":[4008,3108,3008,3018],"_op":"sub","_a":5785,"_b":2777},{"text":"เรือออกเดินทาง 9,125 ตัน ส่งสินค้าลงท่า 2,613 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":6512,"choices":[6512,6522,7512,6612],"_op":"sub","_a":9125,"_b":2613},{"text":"อุซซัปวิ่งได้ 806 เมตรต่อนาที วิ่งนาน 18 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":14508,"choices":[15314,7254,13702,14508],"_op":"mul","_a":806,"_b":18},{"text":"อุซซัปมีเสบียง 5,090 กิโลกรัม แจกจ่ายให้ลูกเรือไป 647 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":4443,"choices":[5443,4453,4543,4443],"_op":"sub","_a":5090,"_b":647},{"text":"เสบียง 6,544 กิโลกรัม พอสำหรับ 8 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":818,"choices":[817,8,818,819],"_op":"div","_a":6544,"_b":8},{"text":"เสบียง 3,980 กิโลกรัม พอสำหรับ 5 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":796,"choices":[797,795,796,5],"_op":"div","_a":3980,"_b":5},{"text":"เรือบรรทุกสินค้า 9,653 ตัน แวะท่าเรือรับสินค้าเพิ่ม 280 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":9933,"choices":[9923,8933,9933,9833],"_op":"add","_a":9653,"_b":280},{"text":"อุซซัปมีลูกธนู 2,511 ดอก ยิงออกไป 1,221 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":1290,"choices":[2290,1390,1290,1300],"_op":"sub","_a":2511,"_b":1221},{"text":"เดินทาง 44 วัน วันละ 974 ไมล์ทะเล รวมระยะทางทั้งหมดกี่ไมล์ทะเล?","ans":42856,"choices":[41882,43830,7792,42856],"_op":"mul","_a":974,"_b":44},{"text":"เสบียง 1,737 กิโลกรัม พอสำหรับ 9 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":193,"choices":[194,193,192,9],"_op":"div","_a":1737,"_b":9},{"text":"คลังไซรัปวิลเลจมีเสบียง 3,161 กิโลกรัม รับของเพิ่มมาอีก 4,304 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":7465,"choices":[7465,6465,7365,7455],"_op":"add","_a":3161,"_b":4304},{"text":"คลังสมบัติมีเหรียญ 9,075 เบรี โจรงัดแงะไปได้ 2,624 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":6451,"choices":[6461,7451,6451,6551],"_op":"sub","_a":9075,"_b":2624},{"text":"อุซซัปแบ่งสมบัติ 3,460 เบรี ออกเป็น 5 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":692,"choices":[693,692,691,5],"_op":"div","_a":3460,"_b":5},{"text":"อุซซัปนับเงินในกระเป๋าได้ 2,044 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 4,533 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":6577,"choices":[6477,6567,5577,6577],"_op":"add","_a":2044,"_b":4533},{"text":"เรือออกเดินทาง 6,203 ตัน ส่งสินค้าลงท่า 1,774 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":4429,"choices":[4529,4439,4429,5429],"_op":"sub","_a":6203,"_b":1774},{"text":"อุซซัปเก็บเปลือกหอยได้ 7,135 ชิ้น คายะเก็บเพิ่มให้อีก 1,666 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":8801,"choices":[8701,8801,7801,8791],"_op":"add","_a":7135,"_b":1666},{"text":"ไซรัปวิลเลจเก็บภาษีได้ 3,678 เบรี ใช้จ่ายซ่อมกำแพง 1,438 เบรี เหลือในคลังกี่เบรี?","ans":2240,"choices":[2340,2250,3240,2240],"_op":"sub","_a":3678,"_b":1438},{"text":"แต่ละกล่องบรรจุเสบียง 641 กิโลกรัม มี 19 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":12179,"choices":[12820,12179,6410,11538],"_op":"mul","_a":641,"_b":19},{"text":"ห้องเก็บสินค้ามี 45 แถว แถวละ 574 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":25830,"choices":[26404,25830,25256,5166],"_op":"mul","_a":574,"_b":45},{"text":"เรือออกเดินทาง 9,046 ตัน ส่งสินค้าลงท่า 2,935 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":6111,"choices":[7111,6111,6121,6211],"_op":"sub","_a":9046,"_b":2935},{"text":"คลังไซรัปวิลเลจมีเสบียง 1,527 กิโลกรัม รับของเพิ่มมาอีก 5,508 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":7035,"choices":[7035,6035,6935,7025],"_op":"add","_a":1527,"_b":5508},{"text":"คลังสมบัติมีเหรียญ 2,602 เบรี โจรงัดแงะไปได้ 306 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":2296,"choices":[2306,2296,2396,3296],"_op":"sub","_a":2602,"_b":306},{"text":"อุซซัปแบ่งสมบัติ 4,290 เบรี ออกเป็น 5 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":858,"choices":[859,857,858,5],"_op":"div","_a":4290,"_b":5},{"text":"ลูกเรือ 24 คน แต่ละคนได้รับค่าจ้างคนละ 652 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":15648,"choices":[15648,14996,3912,16300],"_op":"mul","_a":652,"_b":24},{"text":"เรือบรรทุกสินค้า 4,836 ตัน แวะท่าเรือรับสินค้าเพิ่ม 4,819 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":9655,"choices":[9655,9555,8655,9645],"_op":"add","_a":4836,"_b":4819},{"text":"แต่ละกล่องบรรจุเสบียง 997 กิโลกรัม มี 20 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":19940,"choices":[20937,19940,1994,18943],"_op":"mul","_a":997,"_b":20},{"text":"ไซรัปวิลเลจมีคนอยู่ 1,998 คน มีเด็กเกิดใหม่ 4,660 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":6658,"choices":[6648,6658,5658,6558],"_op":"add","_a":1998,"_b":4660},{"text":"กองเรือคาปเตนคูโรมี 2,268 ลำ ถูกทำลายไป 805 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":1463,"choices":[2463,1473,1463,1563],"_op":"sub","_a":2268,"_b":805},{"text":"ระยะทางจากต้นทางถึงปลายทาง 8,188 ไมล์ทะเล คายะเดินมาแล้ว 1,322 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":6866,"choices":[6876,6866,7866,6966],"_op":"sub","_a":8188,"_b":1322},{"text":"คายะเดินทางวันแรก 4,948 ไมล์ทะเล วันที่สองเดิน 1,946 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":6894,"choices":[6894,6794,5894,6884],"_op":"add","_a":4948,"_b":1946},{"text":"เสบียง 4,208 กิโลกรัม พอสำหรับ 8 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":526,"choices":[526,8,527,525],"_op":"div","_a":4208,"_b":8},{"text":"ไซรัปวิลเลจเก็บภาษีได้ 5,677 เบรี ใช้จ่ายซ่อมกำแพง 932 เบรี เหลือในคลังกี่เบรี?","ans":4745,"choices":[4845,4755,4745,5745],"_op":"sub","_a":5677,"_b":932},{"text":"แบ่งเสบียง 1,944 ชิ้น ให้ลูกเรือ 3 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":648,"choices":[3,647,648,649],"_op":"div","_a":1944,"_b":3},{"text":"ลูกเรือ 49 คน แต่ละคนได้รับค่าจ้างคนละ 486 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":23814,"choices":[6318,24300,23814,23328],"_op":"mul","_a":486,"_b":49},{"text":"เรือบรรทุกสินค้า 8,854 ตัน แวะท่าเรือรับสินค้าเพิ่ม 527 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":9381,"choices":[9371,8381,9281,9381],"_op":"add","_a":8854,"_b":527},{"text":"อุซซัปแบ่งสมบัติ 4,295 เบรี ออกเป็น 5 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":859,"choices":[859,860,858,5],"_op":"div","_a":4295,"_b":5},{"text":"เรือบรรทุกสินค้า 7,498 ตัน แวะท่าเรือรับสินค้าเพิ่ม 1,080 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":8578,"choices":[8568,7578,8578,8478],"_op":"add","_a":7498,"_b":1080},{"text":"อุซซัปวิ่งได้ 646 เมตรต่อนาที วิ่งนาน 33 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":21318,"choices":[20672,21318,3876,21964],"_op":"mul","_a":646,"_b":33},{"text":"แบ่งเสบียง 1,800 ชิ้น ให้ลูกเรือ 9 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":200,"choices":[9,200,201,199],"_op":"div","_a":1800,"_b":9},{"text":"เงินรางวัล 2,940 เบรี แบ่งให้ผู้ชนะ 7 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":420,"choices":[420,7,421,419],"_op":"div","_a":2940,"_b":7},{"text":"สินค้า 464 กิโลกรัม แจกจ่ายลงเรือ 4 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":116,"choices":[116,4,115,117],"_op":"div","_a":464,"_b":4},{"text":"อุซซัปมีลูกธนู 4,714 ดอก ยิงออกไป 1,451 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":3263,"choices":[4263,3273,3363,3263],"_op":"sub","_a":4714,"_b":1451},{"text":"ไซรัปวิลเลจเก็บภาษีได้ 9,680 เบรี ใช้จ่ายซ่อมกำแพง 4,610 เบรี เหลือในคลังกี่เบรี?","ans":5070,"choices":[5080,5070,5170,6070],"_op":"sub","_a":9680,"_b":4610},{"text":"เรือบรรทุกสินค้า 8,550 ตัน แวะท่าเรือรับสินค้าเพิ่ม 444 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":8994,"choices":[7994,8894,8984,8994],"_op":"add","_a":8550,"_b":444},{"text":"แบ่งเสบียง 2,620 ชิ้น ให้ลูกเรือ 4 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":655,"choices":[4,655,654,656],"_op":"div","_a":2620,"_b":4},{"text":"คลังสมบัติมีเหรียญ 2,717 เบรี โจรงัดแงะไปได้ 1,468 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":1249,"choices":[2249,1349,1259,1249],"_op":"sub","_a":2717,"_b":1468},{"text":"เรือออกเดินทาง 5,291 ตัน ส่งสินค้าลงท่า 378 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":4913,"choices":[5013,4923,5913,4913],"_op":"sub","_a":5291,"_b":378},{"text":"เสบียง 1,127 กิโลกรัม พอสำหรับ 7 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":161,"choices":[160,161,162,7],"_op":"div","_a":1127,"_b":7},{"text":"ห้องเก็บสินค้ามี 11 แถว แถวละ 116 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":1276,"choices":[1276,232,1392,1160],"_op":"mul","_a":116,"_b":11},{"text":"ลูกเรือ 29 คน แต่ละคนได้รับค่าจ้างคนละ 648 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":18792,"choices":[18144,19440,18792,7128],"_op":"mul","_a":648,"_b":29},{"text":"ไซรัปวิลเลจมีคนอยู่ 2,578 คน มีเด็กเกิดใหม่ 4,395 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":6973,"choices":[5973,6973,6873,6963],"_op":"add","_a":2578,"_b":4395},{"text":"เงินรางวัล 2,611 เบรี แบ่งให้ผู้ชนะ 7 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":373,"choices":[7,374,373,372],"_op":"div","_a":2611,"_b":7},{"text":"อุซซัปมีลูกธนู 9,020 ดอก ยิงออกไป 4,728 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":4292,"choices":[4292,4392,4302,5292],"_op":"sub","_a":9020,"_b":4728},{"text":"เงินรางวัล 390 เบรี แบ่งให้ผู้ชนะ 2 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":195,"choices":[2,195,194,196],"_op":"div","_a":390,"_b":2},{"text":"อุซซัปนับเงินในกระเป๋าได้ 1,919 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 5,316 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":7235,"choices":[7235,7135,7225,6235],"_op":"add","_a":1919,"_b":5316},{"text":"สินค้า 6,080 กิโลกรัม แจกจ่ายลงเรือ 8 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":760,"choices":[761,759,8,760],"_op":"div","_a":6080,"_b":8},{"text":"อุซซัปเก็บเปลือกหอยได้ 4,764 ชิ้น คายะเก็บเพิ่มให้อีก 1,831 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":6595,"choices":[6595,6495,6585,5595],"_op":"add","_a":4764,"_b":1831},{"text":"ลูกเรือ 28 คน แต่ละคนได้รับค่าจ้างคนละ 800 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":22400,"choices":[21600,22400,23200,8000],"_op":"mul","_a":800,"_b":28},{"text":"ไซรัปวิลเลจมีคนอยู่ 4,394 คน มีเด็กเกิดใหม่ 4,908 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":9302,"choices":[9292,8302,9202,9302],"_op":"add","_a":4394,"_b":4908},{"text":"แต่ละกล่องบรรจุเสบียง 266 กิโลกรัม มี 47 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":12502,"choices":[12768,2926,12236,12502],"_op":"mul","_a":266,"_b":47},{"text":"เรือ 19 ลำ ลำหนึ่งบรรทุกได้ 493 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":9367,"choices":[9860,9367,8874,4930],"_op":"mul","_a":493,"_b":19},{"text":"กองทัพคาปเตนคูโรออกรบ 8,661 นาย กลับมา 2,001 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":6660,"choices":[6760,6660,6670,7660],"_op":"sub","_a":8661,"_b":2001},{"text":"ลูกเรือ 31 คน แต่ละคนได้รับค่าจ้างคนละ 892 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":27652,"choices":[26760,28544,3568,27652],"_op":"mul","_a":892,"_b":31},{"text":"คลังไซรัปวิลเลจมีเสบียง 4,737 กิโลกรัม รับของเพิ่มมาอีก 3,014 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":7751,"choices":[6751,7741,7651,7751],"_op":"add","_a":4737,"_b":3014},{"text":"แต่ละกล่องบรรจุเสบียง 187 กิโลกรัม มี 29 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":5423,"choices":[5236,5610,5423,2057],"_op":"mul","_a":187,"_b":29},{"text":"อุซซัปฝึกซ้อม 257 ครั้งต่อวัน ใน 35 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":8995,"choices":[2056,8995,8738,9252],"_op":"mul","_a":257,"_b":35},{"text":"อุซซัปแบ่งสมบัติ 579 เบรี ออกเป็น 3 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":193,"choices":[192,3,193,194],"_op":"div","_a":579,"_b":3},{"text":"เรือ 28 ลำ ลำหนึ่งบรรทุกได้ 879 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":24612,"choices":[8790,23733,25491,24612],"_op":"mul","_a":879,"_b":28},{"text":"ห้องเก็บสินค้ามี 39 แถว แถวละ 541 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":21099,"choices":[21099,6492,20558,21640],"_op":"mul","_a":541,"_b":39},{"text":"เรือออกเดินทางจากท่าแรก 6,798 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 2,370 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":9168,"choices":[9158,9168,8168,9068],"_op":"add","_a":6798,"_b":2370},{"text":"คลังไซรัปวิลเลจมีเสบียง 5,781 กิโลกรัม รับของเพิ่มมาอีก 3,489 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":9270,"choices":[9170,9270,9260,8270],"_op":"add","_a":5781,"_b":3489},{"text":"อุซซัปฝึกซ้อม 685 ครั้งต่อวัน ใน 44 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":30140,"choices":[30825,30140,5480,29455],"_op":"mul","_a":685,"_b":44},{"text":"สินค้า 2,448 กิโลกรัม แจกจ่ายลงเรือ 6 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":408,"choices":[409,6,408,407],"_op":"div","_a":2448,"_b":6},{"text":"อุซซัปวิ่งได้ 271 เมตรต่อนาที วิ่งนาน 38 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":10298,"choices":[10569,10027,10298,2981],"_op":"mul","_a":271,"_b":38},{"text":"คายะเดินทางวันแรก 2,260 ไมล์ทะเล วันที่สองเดิน 3,058 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":5318,"choices":[5218,5318,4318,5308],"_op":"add","_a":2260,"_b":3058},{"text":"เรือออกเดินทางจากท่าแรก 4,203 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 3,850 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":8053,"choices":[8053,7953,7053,8043],"_op":"add","_a":4203,"_b":3850},{"text":"เสบียง 3,520 กิโลกรัม พอสำหรับ 8 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":440,"choices":[440,8,441,439],"_op":"div","_a":3520,"_b":8},{"text":"เรือออกเดินทาง 6,984 ตัน ส่งสินค้าลงท่า 1,863 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":5121,"choices":[6121,5121,5131,5221],"_op":"sub","_a":6984,"_b":1863},{"text":"เรือออกเดินทาง 9,348 ตัน ส่งสินค้าลงท่า 2,673 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":6675,"choices":[7675,6685,6675,6775],"_op":"sub","_a":9348,"_b":2673},{"text":"อุซซัปมีลูกธนู 9,544 ดอก ยิงออกไป 4,817 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":4727,"choices":[4737,4727,4827,5727],"_op":"sub","_a":9544,"_b":4817},{"text":"ราคาเสบียงชิ้นละ 936 เบรี ซื้อมา 36 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":33696,"choices":[32760,8424,34632,33696],"_op":"mul","_a":936,"_b":36},{"text":"เสบียง 3,192 กิโลกรัม พอสำหรับ 4 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":798,"choices":[799,797,798,4],"_op":"div","_a":3192,"_b":4},{"text":"สินค้า 2,740 กิโลกรัม แจกจ่ายลงเรือ 5 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":548,"choices":[549,548,547,5],"_op":"div","_a":2740,"_b":5},{"text":"คายะเดินทางวันแรก 3,280 ไมล์ทะเล วันที่สองเดิน 5,288 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":8568,"choices":[7568,8568,8558,8468],"_op":"add","_a":3280,"_b":5288},{"text":"ห้องเก็บสินค้ามี 38 แถว แถวละ 832 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":31616,"choices":[32448,9152,30784,31616],"_op":"mul","_a":832,"_b":38},{"text":"คลังไซรัปวิลเลจมีเสบียง 7,566 กิโลกรัม รับของเพิ่มมาอีก 2,288 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":9854,"choices":[9844,9854,8854,9754],"_op":"add","_a":7566,"_b":2288},{"text":"เรือบรรทุกสินค้า 2,791 ตัน แวะท่าเรือรับสินค้าเพิ่ม 2,133 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":4924,"choices":[3924,4824,4924,4914],"_op":"add","_a":2791,"_b":2133},{"text":"สินค้า 6,960 กิโลกรัม แจกจ่ายลงเรือ 8 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":870,"choices":[869,870,8,871],"_op":"div","_a":6960,"_b":8},{"text":"แต่ละกล่องบรรจุเสบียง 200 กิโลกรัม มี 27 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":5400,"choices":[5400,5200,5600,1800],"_op":"mul","_a":200,"_b":27},{"text":"เรือออกเดินทาง 7,908 ตัน ส่งสินค้าลงท่า 3,893 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":4015,"choices":[4015,4025,5015,4115],"_op":"sub","_a":7908,"_b":3893},{"text":"ห้องเก็บสินค้ามี 29 แถว แถวละ 207 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":6003,"choices":[6003,5796,2277,6210],"_op":"mul","_a":207,"_b":29},{"text":"เรือบรรทุกสินค้า 6,707 ตัน แวะท่าเรือรับสินค้าเพิ่ม 1,377 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":8084,"choices":[8074,7084,7984,8084],"_op":"add","_a":6707,"_b":1377},{"text":"อุซซัปแบ่งสมบัติ 4,109 เบรี ออกเป็น 7 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":587,"choices":[586,587,588,7],"_op":"div","_a":4109,"_b":7},{"text":"ระยะทางจากต้นทางถึงปลายทาง 6,725 ไมล์ทะเล คายะเดินมาแล้ว 375 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":6350,"choices":[6450,6350,7350,6360],"_op":"sub","_a":6725,"_b":375},{"text":"สินค้า 1,938 กิโลกรัม แจกจ่ายลงเรือ 2 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":969,"choices":[969,2,970,968],"_op":"div","_a":1938,"_b":2},{"text":"เรือออกเดินทาง 5,496 ตัน ส่งสินค้าลงท่า 2,213 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":3283,"choices":[3283,4283,3383,3293],"_op":"sub","_a":5496,"_b":2213},{"text":"ห้องเก็บสินค้ามี 25 แถว แถวละ 573 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":14325,"choices":[4011,14325,13752,14898],"_op":"mul","_a":573,"_b":25},{"text":"แบ่งเสบียง 1,032 ชิ้น ให้ลูกเรือ 8 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":129,"choices":[128,130,8,129],"_op":"div","_a":1032,"_b":8},{"text":"โกดังเก็บสินค้า 7,370 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 118 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":7488,"choices":[7388,7488,7478,6488],"_op":"add","_a":7370,"_b":118},{"text":"เรือออกเดินทาง 3,167 ตัน ส่งสินค้าลงท่า 1,737 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":1430,"choices":[1430,1440,1530,2430],"_op":"sub","_a":3167,"_b":1737}],"4":[{"text":"แซนจิมีลูกธนู 96,178 ดอก ยิงออกไป 49,340 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":46838,"choices":[46838,46938,46848,47838],"_op":"sub","_a":96178,"_b":49340},{"text":"กองทัพมิฮอว์คออกรบ 44,947 นาย กลับมา 11,522 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":33425,"choices":[33435,33525,33425,34425],"_op":"sub","_a":44947,"_b":11522},{"text":"เรือบรรทุกสินค้า 37,509 ตัน แวะท่าเรือรับสินค้าเพิ่ม 53,230 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":90739,"choices":[90739,89739,90729,90639],"_op":"add","_a":37509,"_b":53230},{"text":"ทหาร 4,665 นาย จัดเข้าหมวด 5 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":933,"choices":[934,932,933,5],"_op":"div","_a":4665,"_b":5},{"text":"เสบียง 4,266 กิโลกรัม พอสำหรับ 6 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":711,"choices":[712,710,711,6],"_op":"div","_a":4266,"_b":6},{"text":"สินค้า 4,116 กิโลกรัม แจกจ่ายลงเรือ 6 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":686,"choices":[686,685,687,6],"_op":"div","_a":4116,"_b":6},{"text":"แซนจิฝึกซ้อม 160 ครั้งต่อวัน ใน 28 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":4480,"choices":[4320,1600,4480,4640],"_op":"mul","_a":160,"_b":28},{"text":"คลังบาราตีเอมีเสบียง 52,217 กิโลกรัม รับของเพิ่มมาอีก 16,323 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":68540,"choices":[67540,68530,68440,68540],"_op":"add","_a":52217,"_b":16323},{"text":"คลังบาราตีเอมีเสบียง 92,288 กิโลกรัม รับของเพิ่มมาอีก 3,493 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":95781,"choices":[95771,94781,95681,95781],"_op":"add","_a":92288,"_b":3493},{"text":"ดอน ครีคเดินทางวันแรก 62,802 ไมล์ทะเล วันที่สองเดิน 33,891 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":96693,"choices":[95693,96693,96593,96683],"_op":"add","_a":62802,"_b":33891},{"text":"ลูกเรือ 48 คน แต่ละคนได้รับค่าจ้างคนละ 435 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":20880,"choices":[20445,21315,5220,20880],"_op":"mul","_a":435,"_b":48},{"text":"บาราตีเอเก็บภาษีได้ 93,709 เบรี ใช้จ่ายซ่อมกำแพง 43,625 เบรี เหลือในคลังกี่เบรี?","ans":50084,"choices":[50094,51084,50084,50184],"_op":"sub","_a":93709,"_b":43625},{"text":"แต่ละกล่องบรรจุวัตถุดิบ 323 กิโลกรัม มี 38 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":12274,"choices":[3553,12597,12274,11951],"_op":"mul","_a":323,"_b":38},{"text":"บาราตีเอมีคนอยู่ 47,171 คน มีเด็กเกิดใหม่ 22,235 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":69406,"choices":[69396,68406,69306,69406],"_op":"add","_a":47171,"_b":22235},{"text":"แซนจิเก็บเปลือกหอยได้ 16,021 ชิ้น ดอน ครีคเก็บเพิ่มให้อีก 6,625 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":22646,"choices":[21646,22636,22646,22546],"_op":"add","_a":16021,"_b":6625},{"text":"ลูกเรือ 9 คน แต่ละคนได้รับค่าจ้างคนละ 8,230 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":74070,"choices":[74070,65840,82300,79200],"_op":"mul","_a":8230,"_b":9},{"text":"แซนจิวิ่งได้ 5,945 เมตรต่อนาที วิ่งนาน 4 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":23780,"choices":[21691,17835,23780,29725],"_op":"mul","_a":5945,"_b":4},{"text":"ลูกเรือ 4 คน แต่ละคนได้รับค่าจ้างคนละ 7,092 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":28368,"choices":[35460,28368,21276,28210],"_op":"mul","_a":7092,"_b":4},{"text":"เรือ 3 ลำ ลำหนึ่งบรรทุกได้ 8,032 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":24096,"choices":[32128,24096,16064,21213],"_op":"mul","_a":8032,"_b":3},{"text":"แต่ละกล่องบรรจุวัตถุดิบ 235 กิโลกรัม มี 48 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":11280,"choices":[11515,2820,11280,11045],"_op":"mul","_a":235,"_b":48},{"text":"แซนจิแบ่งสมบัติ 6,552 เบรี ออกเป็น 7 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":936,"choices":[937,936,7,935],"_op":"div","_a":6552,"_b":7},{"text":"แต่ละกล่องบรรจุวัตถุดิบ 589 กิโลกรัม มี 15 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":8835,"choices":[8835,3534,9424,8246],"_op":"mul","_a":589,"_b":15},{"text":"เรือบรรทุกสินค้า 23,526 ตัน แวะท่าเรือรับสินค้าเพิ่ม 20,635 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":44161,"choices":[44151,43161,44161,44061],"_op":"add","_a":23526,"_b":20635},{"text":"บาราตีเอมีคนอยู่ 27,451 คน มีเด็กเกิดใหม่ 42,146 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":69597,"choices":[69497,69597,69587,68597],"_op":"add","_a":27451,"_b":42146},{"text":"แซนจิเก็บเปลือกหอยได้ 89,995 ชิ้น ดอน ครีคเก็บเพิ่มให้อีก 2,788 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":92783,"choices":[92683,91783,92783,92773],"_op":"add","_a":89995,"_b":2788},{"text":"เรือออกเดินทาง 92,823 ตัน ส่งสินค้าลงท่า 49,138 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":43685,"choices":[43785,43685,44685,43695],"_op":"sub","_a":92823,"_b":49138},{"text":"กองทัพมิฮอว์คออกรบ 38,974 นาย กลับมา 2,940 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":36034,"choices":[36044,36134,37034,36034],"_op":"sub","_a":38974,"_b":2940},{"text":"บาราตีเอเก็บภาษีได้ 56,576 เบรี ใช้จ่ายซ่อมกำแพง 14,170 เบรี เหลือในคลังกี่เบรี?","ans":42406,"choices":[43406,42406,42416,42506],"_op":"sub","_a":56576,"_b":14170},{"text":"แต่ละกล่องบรรจุวัตถุดิบ 760 กิโลกรัม มี 16 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":12160,"choices":[12920,12160,5320,11400],"_op":"mul","_a":760,"_b":16},{"text":"ดอน ครีคเดินทางวันแรก 96,298 ไมล์ทะเล วันที่สองเดิน 3,687 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":99985,"choices":[99975,99985,99885,98985],"_op":"add","_a":96298,"_b":3687},{"text":"แซนจินับเงินในกระเป๋าได้ 61,347 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 19,468 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":80815,"choices":[79815,80805,80815,80715],"_op":"add","_a":61347,"_b":19468},{"text":"เงินรางวัล 1,038 เบรี แบ่งให้ผู้ชนะ 3 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":346,"choices":[345,347,346,3],"_op":"div","_a":1038,"_b":3},{"text":"แซนจิฝึกซ้อม 6,916 ครั้งต่อวัน ใน 7 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":48412,"choices":[48412,41496,55328,48940],"_op":"mul","_a":6916,"_b":7},{"text":"แซนจิแบ่งสมบัติ 7,992 เบรี ออกเป็น 9 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":888,"choices":[889,887,9,888],"_op":"div","_a":7992,"_b":9},{"text":"แซนจิมีลูกธนู 12,307 ดอก ยิงออกไป 2,247 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":10060,"choices":[10060,11060,10070,10160],"_op":"sub","_a":12307,"_b":2247},{"text":"กองเรือมิฮอว์คมี 76,902 ลำ ถูกทำลายไป 18,875 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":58027,"choices":[58027,59027,58037,58127],"_op":"sub","_a":76902,"_b":18875},{"text":"เรือออกเดินทาง 21,303 ตัน ส่งสินค้าลงท่า 10,594 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":10709,"choices":[10719,11709,10809,10709],"_op":"sub","_a":21303,"_b":10594},{"text":"แซนจิมีลูกธนู 20,857 ดอก ยิงออกไป 8,477 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":12380,"choices":[12480,13380,12390,12380],"_op":"sub","_a":20857,"_b":8477},{"text":"เรือ 48 ลำ ลำหนึ่งบรรทุกได้ 500 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":24000,"choices":[24000,24500,23500,6000],"_op":"mul","_a":500,"_b":48},{"text":"โกดังเก็บสินค้า 41,278 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 3,894 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":45172,"choices":[45162,45172,44172,45072],"_op":"add","_a":41278,"_b":3894},{"text":"แซนจินับเงินในกระเป๋าได้ 69,424 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 20,163 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":89587,"choices":[89577,88587,89487,89587],"_op":"add","_a":69424,"_b":20163},{"text":"แบ่งวัตถุดิบ 336 ชิ้น ให้ลูกเรือ 3 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":112,"choices":[111,112,3,113],"_op":"div","_a":336,"_b":3},{"text":"ราคาวัตถุดิบชิ้นละ 267 เบรี ซื้อมา 42 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":11214,"choices":[11214,1602,11481,10947],"_op":"mul","_a":267,"_b":42},{"text":"ดอน ครีคเดินทางวันแรก 26,637 ไมล์ทะเล วันที่สองเดิน 49,237 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":75874,"choices":[74874,75874,75774,75864],"_op":"add","_a":26637,"_b":49237},{"text":"เสบียง 3,024 กิโลกรัม พอสำหรับ 8 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":378,"choices":[378,379,377,8],"_op":"div","_a":3024,"_b":8},{"text":"เรือบรรทุกสินค้า 75,031 ตัน แวะท่าเรือรับสินค้าเพิ่ม 15,015 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":90046,"choices":[89046,90046,90036,89946],"_op":"add","_a":75031,"_b":15015},{"text":"แซนจิวิ่งได้ 7,024 เมตรต่อนาที วิ่งนาน 4 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":28096,"choices":[35120,31060,21072,28096],"_op":"mul","_a":7024,"_b":4},{"text":"คลังสมบัติมีเหรียญ 40,437 เบรี โจรงัดแงะไปได้ 16,773 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":23664,"choices":[23674,24664,23764,23664],"_op":"sub","_a":40437,"_b":16773},{"text":"เรือบรรทุกสินค้า 16,026 ตัน แวะท่าเรือรับสินค้าเพิ่ม 31,017 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":47043,"choices":[47043,46043,47033,46943],"_op":"add","_a":16026,"_b":31017},{"text":"ห้องเก็บสินค้ามี 13 แถว แถวละ 978 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":12714,"choices":[3912,11736,13692,12714],"_op":"mul","_a":978,"_b":13},{"text":"ดอน ครีคเดินทางวันแรก 64,559 ไมล์ทะเล วันที่สองเดิน 21,067 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":85626,"choices":[84626,85626,85526,85616],"_op":"add","_a":64559,"_b":21067},{"text":"แซนจิฝึกซ้อม 2,956 ครั้งต่อวัน ใน 2 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":5912,"choices":[2956,5660,8868,5912],"_op":"mul","_a":2956,"_b":2},{"text":"แซนจิวิ่งได้ 998 เมตรต่อนาที วิ่งนาน 40 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":39920,"choices":[40918,39920,38922,3992],"_op":"mul","_a":998,"_b":40},{"text":"ราคาวัตถุดิบชิ้นละ 8,483 เบรี ซื้อมา 2 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":16966,"choices":[15752,25449,16966,8483],"_op":"mul","_a":8483,"_b":2},{"text":"แซนจิมีเสบียง 92,120 กิโลกรัม แจกจ่ายให้ลูกเรือไป 15,997 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":76123,"choices":[77123,76123,76223,76133],"_op":"sub","_a":92120,"_b":15997},{"text":"แต่ละกล่องบรรจุวัตถุดิบ 891 กิโลกรัม มี 23 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":20493,"choices":[20493,4455,21384,19602],"_op":"mul","_a":891,"_b":23},{"text":"บาราตีเอเก็บภาษีได้ 13,633 เบรี ใช้จ่ายซ่อมกำแพง 2,008 เบรี เหลือในคลังกี่เบรี?","ans":11625,"choices":[11635,11725,11625,12625],"_op":"sub","_a":13633,"_b":2008},{"text":"แบ่งวัตถุดิบ 7,752 ชิ้น ให้ลูกเรือ 8 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":969,"choices":[969,8,968,970],"_op":"div","_a":7752,"_b":8},{"text":"กองเรือมิฮอว์คมี 79,943 ลำ ถูกทำลายไป 15,708 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":64235,"choices":[64245,65235,64235,64335],"_op":"sub","_a":79943,"_b":15708},{"text":"แซนจิแบ่งสมบัติ 1,170 เบรี ออกเป็น 6 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":195,"choices":[194,6,196,195],"_op":"div","_a":1170,"_b":6},{"text":"กองทัพมิฮอว์คออกรบ 59,323 นาย กลับมา 15,122 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":44201,"choices":[45201,44301,44211,44201],"_op":"sub","_a":59323,"_b":15122},{"text":"เรือออกเดินทางจากท่าแรก 93,521 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 3,330 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":96851,"choices":[95851,96751,96851,96841],"_op":"add","_a":93521,"_b":3330},{"text":"ระยะทางจากต้นทางถึงปลายทาง 41,534 ไมล์ทะเล ดอน ครีคเดินมาแล้ว 9,657 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":31877,"choices":[31977,31887,32877,31877],"_op":"sub","_a":41534,"_b":9657},{"text":"แซนจิวิ่งได้ 6,211 เมตรต่อนาที วิ่งนาน 9 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":55899,"choices":[55899,53019,62110,49688],"_op":"mul","_a":6211,"_b":9},{"text":"แซนจิแบ่งสมบัติ 777 เบรี ออกเป็น 3 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":259,"choices":[3,259,260,258],"_op":"div","_a":777,"_b":3},{"text":"เรือ 37 ลำ ลำหนึ่งบรรทุกได้ 421 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":15577,"choices":[15998,4210,15577,15156],"_op":"mul","_a":421,"_b":37},{"text":"สินค้า 3,444 กิโลกรัม แจกจ่ายลงเรือ 6 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":574,"choices":[573,574,575,6],"_op":"div","_a":3444,"_b":6},{"text":"แต่ละกล่องบรรจุวัตถุดิบ 5,984 กิโลกรัม มี 2 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":11968,"choices":[11874,5984,11968,17952],"_op":"mul","_a":5984,"_b":2},{"text":"แซนจินับเงินในกระเป๋าได้ 56,627 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 26,068 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":82695,"choices":[82695,82595,81695,82685],"_op":"add","_a":56627,"_b":26068},{"text":"กองเรือมิฮอว์คมี 14,573 ลำ ถูกทำลายไป 7,899 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":6674,"choices":[7674,6674,6684,6774],"_op":"sub","_a":14573,"_b":7899},{"text":"เรือออกเดินทางจากท่าแรก 22,415 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 30,380 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":52795,"choices":[52695,52795,52785,51795],"_op":"add","_a":22415,"_b":30380},{"text":"ทหาร 1,900 นาย จัดเข้าหมวด 2 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":950,"choices":[950,951,2,949],"_op":"div","_a":1900,"_b":2},{"text":"กองทัพมิฮอว์คออกรบ 59,290 นาย กลับมา 22,588 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":36702,"choices":[37702,36702,36712,36802],"_op":"sub","_a":59290,"_b":22588},{"text":"แซนจิมีเสบียง 18,950 กิโลกรัม แจกจ่ายให้ลูกเรือไป 3,339 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":15611,"choices":[15621,15711,15611,16611],"_op":"sub","_a":18950,"_b":3339},{"text":"แซนจิเก็บเปลือกหอยได้ 26,059 ชิ้น ดอน ครีคเก็บเพิ่มให้อีก 2,898 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":28957,"choices":[28947,28857,28957,27957],"_op":"add","_a":26059,"_b":2898},{"text":"แซนจิแบ่งสมบัติ 4,864 เบรี ออกเป็น 8 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":608,"choices":[608,609,8,607],"_op":"div","_a":4864,"_b":8},{"text":"โกดังเก็บสินค้า 32,650 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 23,296 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":55946,"choices":[55936,55946,55846,54946],"_op":"add","_a":32650,"_b":23296},{"text":"บาราตีเอมีคนอยู่ 68,459 คน มีเด็กเกิดใหม่ 29,048 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":97507,"choices":[96507,97407,97507,97497],"_op":"add","_a":68459,"_b":29048},{"text":"เงินรางวัล 3,660 เบรี แบ่งให้ผู้ชนะ 6 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":610,"choices":[610,611,609,6],"_op":"div","_a":3660,"_b":6},{"text":"ทหาร 2,952 นาย จัดเข้าหมวด 6 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":492,"choices":[492,493,491,6],"_op":"div","_a":2952,"_b":6},{"text":"คลังสมบัติมีเหรียญ 93,174 เบรี โจรงัดแงะไปได้ 35,729 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":57445,"choices":[57545,58445,57445,57455],"_op":"sub","_a":93174,"_b":35729},{"text":"แซนจิเก็บเปลือกหอยได้ 72,873 ชิ้น ดอน ครีคเก็บเพิ่มให้อีก 17,942 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":90815,"choices":[89815,90715,90815,90805],"_op":"add","_a":72873,"_b":17942},{"text":"แซนจิฝึกซ้อม 7,363 ครั้งต่อวัน ใน 6 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":44178,"choices":[44178,39304,36815,51541],"_op":"mul","_a":7363,"_b":6},{"text":"สินค้า 1,860 กิโลกรัม แจกจ่ายลงเรือ 2 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":930,"choices":[931,930,929,2],"_op":"div","_a":1860,"_b":2},{"text":"เรือออกเดินทาง 87,044 ตัน ส่งสินค้าลงท่า 15,354 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":71690,"choices":[71690,71700,71790,72690],"_op":"sub","_a":87044,"_b":15354},{"text":"คลังสมบัติมีเหรียญ 45,434 เบรี โจรงัดแงะไปได้ 17,587 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":27847,"choices":[27857,27847,27947,28847],"_op":"sub","_a":45434,"_b":17587},{"text":"ทหาร 6,713 นาย จัดเข้าหมวด 7 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":959,"choices":[958,959,960,7],"_op":"div","_a":6713,"_b":7},{"text":"ราคาวัตถุดิบชิ้นละ 6,878 เบรี ซื้อมา 2 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":13756,"choices":[14431,20634,6878,13756],"_op":"mul","_a":6878,"_b":2},{"text":"แซนจิวิ่งได้ 956 เมตรต่อนาที วิ่งนาน 42 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":40152,"choices":[5736,40152,39196,41108],"_op":"mul","_a":956,"_b":42},{"text":"แต่ละกล่องบรรจุวัตถุดิบ 2,478 กิโลกรัม มี 2 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":4956,"choices":[2478,7434,4956,4810],"_op":"mul","_a":2478,"_b":2},{"text":"แซนจิมีลูกธนู 10,589 ดอก ยิงออกไป 2,817 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":7772,"choices":[7782,7872,8772,7772],"_op":"sub","_a":10589,"_b":2817},{"text":"ลูกเรือ 2 คน แต่ละคนได้รับค่าจ้างคนละ 6,301 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":12602,"choices":[6301,18903,11695,12602],"_op":"mul","_a":6301,"_b":2},{"text":"กองเรือมิฮอว์คมี 20,006 ลำ ถูกทำลายไป 6,220 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":13786,"choices":[13886,13796,13786,14786],"_op":"sub","_a":20006,"_b":6220},{"text":"ทหาร 1,673 นาย จัดเข้าหมวด 7 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":239,"choices":[240,7,238,239],"_op":"div","_a":1673,"_b":7},{"text":"ราคาวัตถุดิบชิ้นละ 6,198 เบรี ซื้อมา 4 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":24792,"choices":[24792,23645,30990,18594],"_op":"mul","_a":6198,"_b":4},{"text":"แซนจิฝึกซ้อม 851 ครั้งต่อวัน ใน 29 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":24679,"choices":[24679,9361,23828,25530],"_op":"mul","_a":851,"_b":29},{"text":"เสบียง 7,768 กิโลกรัม พอสำหรับ 8 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":971,"choices":[971,970,972,8],"_op":"div","_a":7768,"_b":8},{"text":"กองทัพมิฮอว์คออกรบ 90,634 นาย กลับมา 14,576 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":76058,"choices":[76068,77058,76058,76158],"_op":"sub","_a":90634,"_b":14576},{"text":"เรือบรรทุกสินค้า 20,198 ตัน แวะท่าเรือรับสินค้าเพิ่ม 15,697 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":35895,"choices":[35885,35895,35795,34895],"_op":"add","_a":20198,"_b":15697},{"text":"เดินทาง 32 วัน วันละ 941 ไมล์ทะเล รวมระยะทางทั้งหมดกี่ไมล์ทะเล?","ans":30112,"choices":[29171,31053,4705,30112],"_op":"mul","_a":941,"_b":32}],"5":[{"text":"นามิฝึกซ้อม 2,493 ครั้งต่อวัน ใน 8 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":19944,"choices":[22437,19944,17451,20590],"_op":"mul","_a":2493,"_b":8},{"text":"สินค้า 10,638 กิโลกรัม แจกจ่ายลงเรือ 9 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":1182,"choices":[9,1182,1181,1183],"_op":"div","_a":10638,"_b":9},{"text":"อาร์ลองเดินทางวันแรก 39,654 ไมล์ทะเล วันที่สองเดิน 54,958 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":94612,"choices":[94602,94612,93612,94512],"_op":"add","_a":39654,"_b":54958},{"text":"สินค้า 11,208 กิโลกรัม แจกจ่ายลงเรือ 3 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":3736,"choices":[3737,3736,3,3735],"_op":"div","_a":11208,"_b":3},{"text":"ห้องเก็บสินค้ามี 8 แถว แถวละ 1,999 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":15992,"choices":[13993,15992,16266,17991],"_op":"mul","_a":1999,"_b":8},{"text":"เรือออกเดินทางจากท่าแรก 72,424 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 9,892 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":82316,"choices":[82306,82216,82316,81316],"_op":"add","_a":72424,"_b":9892},{"text":"เรือออกเดินทาง 76,311 ตัน ส่งสินค้าลงท่า 37,535 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":38776,"choices":[39776,38876,38786,38776],"_op":"sub","_a":76311,"_b":37535},{"text":"โกดังเก็บสินค้า 31,910 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 13,986 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":45896,"choices":[45796,45886,45896,44896],"_op":"add","_a":31910,"_b":13986},{"text":"แต่ละกล่องบรรจุเสบียง 2,283 กิโลกรัม มี 8 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":18264,"choices":[15981,18264,20547,17284],"_op":"mul","_a":2283,"_b":8},{"text":"คลังโคโคยาชิมีเสบียง 21,406 กิโลกรัม รับของเพิ่มมาอีก 25,534 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":46940,"choices":[46840,45940,46930,46940],"_op":"add","_a":21406,"_b":25534},{"text":"แบ่งเสบียง 8,442 ชิ้น ให้ลูกเรือ 2 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":4221,"choices":[4221,4220,2,4222],"_op":"div","_a":8442,"_b":2},{"text":"เสบียง 6,428 กิโลกรัม พอสำหรับ 4 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":1607,"choices":[4,1606,1607,1608],"_op":"div","_a":6428,"_b":4},{"text":"ห้องเก็บสินค้ามี 7 แถว แถวละ 5,687 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":39809,"choices":[45496,39809,34122,39359],"_op":"mul","_a":5687,"_b":7},{"text":"นามิฝึกซ้อม 8,750 ครั้งต่อวัน ใน 2 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":17500,"choices":[17500,26250,17656,8750],"_op":"mul","_a":8750,"_b":2},{"text":"ราคาเสบียงชิ้นละ 1,635 เบรี ซื้อมา 8 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":13080,"choices":[11445,14339,13080,14715],"_op":"mul","_a":1635,"_b":8},{"text":"นามินับเงินในกระเป๋าได้ 45,203 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 24,508 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":69711,"choices":[69611,69711,69701,68711],"_op":"add","_a":45203,"_b":24508},{"text":"เงินรางวัล 26,712 เบรี แบ่งให้ผู้ชนะ 6 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":4452,"choices":[4452,4453,6,4451],"_op":"div","_a":26712,"_b":6},{"text":"แบ่งเสบียง 29,940 ชิ้น ให้ลูกเรือ 6 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":4990,"choices":[6,4990,4989,4991],"_op":"div","_a":29940,"_b":6},{"text":"นามิมีลูกธนู 65,127 ดอก ยิงออกไป 5,951 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":59176,"choices":[59186,60176,59176,59276],"_op":"sub","_a":65127,"_b":5951},{"text":"ลูกเรือ 7 คน แต่ละคนได้รับค่าจ้างคนละ 8,937 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":62559,"choices":[53622,62559,71496,63494],"_op":"mul","_a":8937,"_b":7},{"text":"นามิฝึกซ้อม 9,303 ครั้งต่อวัน ใน 8 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":74424,"choices":[65121,82673,83727,74424],"_op":"mul","_a":9303,"_b":8},{"text":"แต่ละกล่องบรรจุเสบียง 4,288 กิโลกรัม มี 2 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":8576,"choices":[12864,7682,8576,4288],"_op":"mul","_a":4288,"_b":2},{"text":"โคโคยาชิเก็บภาษีได้ 36,597 เบรี ใช้จ่ายซ่อมกำแพง 9,077 เบรี เหลือในคลังกี่เบรี?","ans":27520,"choices":[27520,28520,27530,27620],"_op":"sub","_a":36597,"_b":9077},{"text":"นามิแบ่งสมบัติ 11,370 เบรี ออกเป็น 3 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":3790,"choices":[3,3790,3791,3789],"_op":"div","_a":11370,"_b":3},{"text":"โคโคยาชิมีคนอยู่ 87,862 คน มีเด็กเกิดใหม่ 7,408 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":95270,"choices":[94270,95170,95260,95270],"_op":"add","_a":87862,"_b":7408},{"text":"สินค้า 11,683 กิโลกรัม แจกจ่ายลงเรือ 7 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":1669,"choices":[1670,7,1669,1668],"_op":"div","_a":11683,"_b":7},{"text":"ทหาร 9,624 นาย จัดเข้าหมวด 8 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":1203,"choices":[1204,1203,8,1202],"_op":"div","_a":9624,"_b":8},{"text":"ห้องเก็บสินค้ามี 6 แถว แถวละ 4,387 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":26322,"choices":[26322,21935,30709,27368],"_op":"mul","_a":4387,"_b":6},{"text":"นามิฝึกซ้อม 8,767 ครั้งต่อวัน ใน 4 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":35068,"choices":[43835,26301,30998,35068],"_op":"mul","_a":8767,"_b":4},{"text":"คลังโคโคยาชิมีเสบียง 94,245 กิโลกรัม รับของเพิ่มมาอีก 2,355 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":96600,"choices":[96600,96500,95600,96590],"_op":"add","_a":94245,"_b":2355},{"text":"นามิมีเสบียง 43,529 กิโลกรัม แจกจ่ายให้ลูกเรือไป 7,250 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":36279,"choices":[37279,36289,36279,36379],"_op":"sub","_a":43529,"_b":7250},{"text":"คลังสมบัติมีเหรียญ 87,109 เบรี โจรงัดแงะไปได้ 6,805 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":80304,"choices":[80304,80314,81304,80404],"_op":"sub","_a":87109,"_b":6805},{"text":"นามิแบ่งสมบัติ 22,818 เบรี ออกเป็น 6 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":3803,"choices":[3804,3803,3802,6],"_op":"div","_a":22818,"_b":6},{"text":"สินค้า 21,738 กิโลกรัม แจกจ่ายลงเรือ 6 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":3623,"choices":[3624,3623,6,3622],"_op":"div","_a":21738,"_b":6},{"text":"โกดังเก็บสินค้า 34,688 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 9,925 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":44613,"choices":[44613,44603,43613,44513],"_op":"add","_a":34688,"_b":9925},{"text":"โคโคยาชิมีคนอยู่ 96,577 คน มีเด็กเกิดใหม่ 1,409 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":97986,"choices":[97886,96986,97986,97976],"_op":"add","_a":96577,"_b":1409},{"text":"คลังโคโคยาชิมีเสบียง 48,745 กิโลกรัม รับของเพิ่มมาอีก 17,101 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":65846,"choices":[65836,64846,65746,65846],"_op":"add","_a":48745,"_b":17101},{"text":"โกดังเก็บสินค้า 86,418 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 11,701 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":98119,"choices":[98109,98019,98119,97119],"_op":"add","_a":86418,"_b":11701},{"text":"นามิมีเสบียง 80,575 กิโลกรัม แจกจ่ายให้ลูกเรือไป 41,932 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":38643,"choices":[38643,38653,38743,39643],"_op":"sub","_a":80575,"_b":41932},{"text":"นามิวิ่งได้ 3,785 เมตรต่อนาที วิ่งนาน 4 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":15140,"choices":[15140,11355,13723,18925],"_op":"mul","_a":3785,"_b":4},{"text":"โคโคยาชิเก็บภาษีได้ 83,773 เบรี ใช้จ่ายซ่อมกำแพง 12,097 เบรี เหลือในคลังกี่เบรี?","ans":71676,"choices":[71676,72676,71686,71776],"_op":"sub","_a":83773,"_b":12097},{"text":"สินค้า 20,240 กิโลกรัม แจกจ่ายลงเรือ 5 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":4048,"choices":[4048,5,4049,4047],"_op":"div","_a":20240,"_b":5},{"text":"เดินทาง 6 วัน วันละ 5,269 ไมล์ทะเล รวมระยะทางทั้งหมดกี่ไมล์ทะเล?","ans":31614,"choices":[36883,31614,34794,26345],"_op":"mul","_a":5269,"_b":6},{"text":"แต่ละกล่องบรรจุเสบียง 2,166 กิโลกรัม มี 9 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":19494,"choices":[21254,21660,19494,17328],"_op":"mul","_a":2166,"_b":9},{"text":"นามิแบ่งสมบัติ 16,152 เบรี ออกเป็น 6 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":2692,"choices":[6,2693,2691,2692],"_op":"div","_a":16152,"_b":6},{"text":"นามิเก็บเปลือกหอยได้ 54,914 ชิ้น อาร์ลองเก็บเพิ่มให้อีก 26,916 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":81830,"choices":[81820,81730,81830,80830],"_op":"add","_a":54914,"_b":26916},{"text":"สินค้า 8,991 กิโลกรัม แจกจ่ายลงเรือ 3 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":2997,"choices":[2997,3,2998,2996],"_op":"div","_a":8991,"_b":3},{"text":"นามิวิ่งได้ 1,077 เมตรต่อนาที วิ่งนาน 9 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":9693,"choices":[9693,8616,9387,10770],"_op":"mul","_a":1077,"_b":9},{"text":"นามิแบ่งสมบัติ 37,944 เบรี ออกเป็น 9 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":4216,"choices":[4216,4215,9,4217],"_op":"div","_a":37944,"_b":9},{"text":"คลังโคโคยาชิมีเสบียง 93,032 กิโลกรัม รับของเพิ่มมาอีก 3,617 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":96649,"choices":[96649,96549,95649,96639],"_op":"add","_a":93032,"_b":3617},{"text":"นามิมีลูกธนู 11,111 ดอก ยิงออกไป 409 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":10702,"choices":[10702,10802,10712,11702],"_op":"sub","_a":11111,"_b":409},{"text":"คลังสมบัติมีเหรียญ 80,103 เบรี โจรงัดแงะไปได้ 12,589 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":67514,"choices":[67514,67614,67524,68514],"_op":"sub","_a":80103,"_b":12589},{"text":"เรือบรรทุกสินค้า 39,657 ตัน แวะท่าเรือรับสินค้าเพิ่ม 45,550 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":85207,"choices":[85107,85207,84207,85197],"_op":"add","_a":39657,"_b":45550},{"text":"ระยะทางจากต้นทางถึงปลายทาง 60,772 ไมล์ทะเล อาร์ลองเดินมาแล้ว 33,086 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":27686,"choices":[28686,27686,27696,27786],"_op":"sub","_a":60772,"_b":33086},{"text":"นามิมีเสบียง 49,585 กิโลกรัม แจกจ่ายให้ลูกเรือไป 9,629 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":39956,"choices":[40956,40056,39956,39966],"_op":"sub","_a":49585,"_b":9629},{"text":"นามิมีเสบียง 55,422 กิโลกรัม แจกจ่ายให้ลูกเรือไป 29,636 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":25786,"choices":[25786,25886,26786,25796],"_op":"sub","_a":55422,"_b":29636},{"text":"นามิมีลูกธนู 63,373 ดอก ยิงออกไป 1,353 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":62020,"choices":[63020,62120,62030,62020],"_op":"sub","_a":63373,"_b":1353},{"text":"นามิฝึกซ้อม 4,460 ครั้งต่อวัน ใน 2 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":8920,"choices":[8354,8920,13380,4460],"_op":"mul","_a":4460,"_b":2},{"text":"นามินับเงินในกระเป๋าได้ 59,177 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 16,863 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":76040,"choices":[75040,76030,75940,76040],"_op":"add","_a":59177,"_b":16863},{"text":"แบ่งเสบียง 2,394 ชิ้น ให้ลูกเรือ 2 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":1197,"choices":[1198,1197,1196,2],"_op":"div","_a":2394,"_b":2},{"text":"ระยะทางจากต้นทางถึงปลายทาง 60,340 ไมล์ทะเล อาร์ลองเดินมาแล้ว 8,199 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":52141,"choices":[52141,52241,53141,52151],"_op":"sub","_a":60340,"_b":8199},{"text":"แบ่งเสบียง 19,235 ชิ้น ให้ลูกเรือ 5 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":3847,"choices":[3847,3846,5,3848],"_op":"div","_a":19235,"_b":5},{"text":"ระยะทางจากต้นทางถึงปลายทาง 97,225 ไมล์ทะเล อาร์ลองเดินมาแล้ว 6,717 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":90508,"choices":[90508,90608,90518,91508],"_op":"sub","_a":97225,"_b":6717},{"text":"นามิแบ่งสมบัติ 6,471 เบรี ออกเป็น 3 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":2157,"choices":[2157,2158,2156,3],"_op":"div","_a":6471,"_b":3},{"text":"สินค้า 20,930 กิโลกรัม แจกจ่ายลงเรือ 5 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":4186,"choices":[4185,4187,5,4186],"_op":"div","_a":20930,"_b":5},{"text":"นามิแบ่งสมบัติ 9,936 เบรี ออกเป็น 6 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":1656,"choices":[6,1657,1656,1655],"_op":"div","_a":9936,"_b":6},{"text":"คลังสมบัติมีเหรียญ 53,832 เบรี โจรงัดแงะไปได้ 7,784 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":46048,"choices":[46058,47048,46148,46048],"_op":"sub","_a":53832,"_b":7784},{"text":"นามิฝึกซ้อม 2,809 ครั้งต่อวัน ใน 9 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":25281,"choices":[25281,22985,28090,22472],"_op":"mul","_a":2809,"_b":9},{"text":"ทหาร 21,834 นาย จัดเข้าหมวด 6 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":3639,"choices":[3640,3638,6,3639],"_op":"div","_a":21834,"_b":6},{"text":"กองทัพเบลเมลออกรบ 71,353 นาย กลับมา 3,382 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":67971,"choices":[67981,68071,68971,67971],"_op":"sub","_a":71353,"_b":3382},{"text":"โคโคยาชิเก็บภาษีได้ 57,714 เบรี ใช้จ่ายซ่อมกำแพง 26,366 เบรี เหลือในคลังกี่เบรี?","ans":31348,"choices":[31348,31448,31358,32348],"_op":"sub","_a":57714,"_b":26366},{"text":"นามินับเงินในกระเป๋าได้ 22,451 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 55,887 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":78338,"choices":[78338,77338,78238,78328],"_op":"add","_a":22451,"_b":55887},{"text":"นามิมีเสบียง 53,578 กิโลกรัม แจกจ่ายให้ลูกเรือไป 11,815 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":41763,"choices":[41763,42763,41863,41773],"_op":"sub","_a":53578,"_b":11815},{"text":"โคโคยาชิมีคนอยู่ 58,840 คน มีเด็กเกิดใหม่ 22,560 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":81400,"choices":[81390,81300,80400,81400],"_op":"add","_a":58840,"_b":22560},{"text":"คลังโคโคยาชิมีเสบียง 69,839 กิโลกรัม รับของเพิ่มมาอีก 9,007 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":78846,"choices":[78846,78746,78836,77846],"_op":"add","_a":69839,"_b":9007},{"text":"ลูกเรือ 4 คน แต่ละคนได้รับค่าจ้างคนละ 2,852 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":11408,"choices":[8556,10692,14260,11408],"_op":"mul","_a":2852,"_b":4},{"text":"นามิเก็บเปลือกหอยได้ 84,572 ชิ้น อาร์ลองเก็บเพิ่มให้อีก 11,214 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":95786,"choices":[95776,95686,94786,95786],"_op":"add","_a":84572,"_b":11214},{"text":"คลังสมบัติมีเหรียญ 57,502 เบรี โจรงัดแงะไปได้ 20,132 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":37370,"choices":[38370,37380,37470,37370],"_op":"sub","_a":57502,"_b":20132},{"text":"เดินทาง 8 วัน วันละ 2,850 ไมล์ทะเล รวมระยะทางทั้งหมดกี่ไมล์ทะเล?","ans":22800,"choices":[20440,19950,25650,22800],"_op":"mul","_a":2850,"_b":8},{"text":"ราคาเสบียงชิ้นละ 1,202 เบรี ซื้อมา 5 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":6010,"choices":[7212,6352,6010,4808],"_op":"mul","_a":1202,"_b":5},{"text":"คลังโคโคยาชิมีเสบียง 73,167 กิโลกรัม รับของเพิ่มมาอีก 11,429 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":84596,"choices":[84596,84496,84586,83596],"_op":"add","_a":73167,"_b":11429},{"text":"ทหาร 7,270 นาย จัดเข้าหมวด 2 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":3635,"choices":[3635,2,3634,3636],"_op":"div","_a":7270,"_b":2},{"text":"ราคาเสบียงชิ้นละ 2,226 เบรี ซื้อมา 9 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":20034,"choices":[22260,17808,20034,19603],"_op":"mul","_a":2226,"_b":9},{"text":"แบ่งเสบียง 16,270 ชิ้น ให้ลูกเรือ 5 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":3254,"choices":[3254,5,3253,3255],"_op":"div","_a":16270,"_b":5},{"text":"นามิมีเสบียง 20,832 กิโลกรัม แจกจ่ายให้ลูกเรือไป 7,621 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":13211,"choices":[13221,14211,13211,13311],"_op":"sub","_a":20832,"_b":7621},{"text":"เรือ 7 ลำ ลำหนึ่งบรรทุกได้ 8,324 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":58268,"choices":[58268,66592,59424,49944],"_op":"mul","_a":8324,"_b":7},{"text":"ลูกเรือ 2 คน แต่ละคนได้รับค่าจ้างคนละ 7,755 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":15510,"choices":[17031,7755,15510,23265],"_op":"mul","_a":7755,"_b":2},{"text":"โกดังเก็บสินค้า 76,628 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 18,526 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":95154,"choices":[95144,95154,94154,95054],"_op":"add","_a":76628,"_b":18526},{"text":"เดินทาง 5 วัน วันละ 1,889 ไมล์ทะเล รวมระยะทางทั้งหมดกี่ไมล์ทะเล?","ans":9445,"choices":[7556,9445,11334,9671],"_op":"mul","_a":1889,"_b":5},{"text":"เรือ 3 ลำ ลำหนึ่งบรรทุกได้ 8,414 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":25242,"choices":[25242,16828,33656,27610],"_op":"mul","_a":8414,"_b":3},{"text":"ระยะทางจากต้นทางถึงปลายทาง 57,048 ไมล์ทะเล อาร์ลองเดินมาแล้ว 27,293 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":29755,"choices":[29755,30755,29855,29765],"_op":"sub","_a":57048,"_b":27293},{"text":"โคโคยาชิมีคนอยู่ 16,000 คน มีเด็กเกิดใหม่ 58,877 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":74877,"choices":[74877,74867,74777,73877],"_op":"add","_a":16000,"_b":58877},{"text":"โกดังเก็บสินค้า 24,019 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 16,765 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":40784,"choices":[40684,40774,40784,39784],"_op":"add","_a":24019,"_b":16765},{"text":"ทหาร 14,360 นาย จัดเข้าหมวด 5 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":2872,"choices":[2871,2873,2872,5],"_op":"div","_a":14360,"_b":5},{"text":"เรือออกเดินทางจากท่าแรก 16,094 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 41,600 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":57694,"choices":[56694,57594,57684,57694],"_op":"add","_a":16094,"_b":41600},{"text":"คลังสมบัติมีเหรียญ 75,882 เบรี โจรงัดแงะไปได้ 384 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":75498,"choices":[76498,75498,75508,75598],"_op":"sub","_a":75882,"_b":384},{"text":"เรือออกเดินทาง 77,128 ตัน ส่งสินค้าลงท่า 11,713 ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?","ans":65415,"choices":[66415,65415,65425,65515],"_op":"sub","_a":77128,"_b":11713},{"text":"เรือบรรทุกสินค้า 96,182 ตัน แวะท่าเรือรับสินค้าเพิ่ม 2,559 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":98741,"choices":[98731,97741,98641,98741],"_op":"add","_a":96182,"_b":2559},{"text":"สินค้า 15,774 กิโลกรัม แจกจ่ายลงเรือ 6 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":2629,"choices":[6,2628,2629,2630],"_op":"div","_a":15774,"_b":6},{"text":"ระยะทางจากต้นทางถึงปลายทาง 28,611 ไมล์ทะเล อาร์ลองเดินมาแล้ว 6,862 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":21749,"choices":[21849,22749,21759,21749],"_op":"sub","_a":28611,"_b":6862}],"6":[{"text":"สโมเกอร์เดินทางวันแรก 27,048 ไมล์ทะเล วันที่สองเดิน 10,646 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":37694,"choices":[37694,37684,37594,36694],"_op":"add","_a":27048,"_b":10646},{"text":"ลูฟี่ฝึกซ้อม 3,536 ครั้งต่อวัน ใน 2 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":7072,"choices":[3536,6884,10608,7072],"_op":"mul","_a":3536,"_b":2},{"text":"เรือ 7 ลำ ลำหนึ่งบรรทุกได้ 9,037 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":63259,"choices":[68513,72296,54222,63259],"_op":"mul","_a":9037,"_b":7},{"text":"เรือ 45 ลำ ลำหนึ่งบรรทุกได้ 288 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":12960,"choices":[12960,12672,13248,2592],"_op":"mul","_a":288,"_b":45},{"text":"ลูฟี่มีลูกธนู 22,551 ดอก ยิงออกไป 5,824 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":16727,"choices":[16737,16727,17727,16827],"_op":"sub","_a":22551,"_b":5824},{"text":"ระยะทางจากต้นทางถึงปลายทาง 53,893 ไมล์ทะเล สโมเกอร์เดินมาแล้ว 11,922 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":41971,"choices":[41971,42071,42971,41981],"_op":"sub","_a":53893,"_b":11922},{"text":"ราคาสมบัติชิ้นละ 1,144 เบรี ซื้อมา 3 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":3432,"choices":[3477,3432,4576,2288],"_op":"mul","_a":1144,"_b":3},{"text":"สินค้า 7,590 กิโลกรัม แจกจ่ายลงเรือ 2 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":3795,"choices":[3795,3794,2,3796],"_op":"div","_a":7590,"_b":2},{"text":"ลูฟี่วิ่งได้ 362 เมตรต่อนาที วิ่งนาน 46 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":16652,"choices":[17014,3620,16652,16290],"_op":"mul","_a":362,"_b":46},{"text":"ลูฟี่เก็บเปลือกหอยได้ 77,411 ชิ้น สโมเกอร์เก็บเพิ่มให้อีก 16,770 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":94181,"choices":[94171,94081,93181,94181],"_op":"add","_a":77411,"_b":16770},{"text":"เรือ 7 ลำ ลำหนึ่งบรรทุกได้ 4,154 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":29078,"choices":[26375,33232,29078,24924],"_op":"mul","_a":4154,"_b":7},{"text":"โกดังเก็บสินค้า 92,173 กิโลกรัม พ่อค้านำของมาฝากเพิ่ม 636 กิโลกรัม ตาชั่งวัดได้กี่กิโลกรัม?","ans":92809,"choices":[92809,92799,92709,91809],"_op":"add","_a":92173,"_b":636},{"text":"ห้องเก็บสินค้ามี 5 แถว แถวละ 2,702 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":13510,"choices":[14537,13510,16212,10808],"_op":"mul","_a":2702,"_b":5},{"text":"โล้คทาวน์เก็บภาษีได้ 13,613 เบรี ใช้จ่ายซ่อมกำแพง 3,861 เบรี เหลือในคลังกี่เบรี?","ans":9752,"choices":[10752,9762,9852,9752],"_op":"sub","_a":13613,"_b":3861},{"text":"สโมเกอร์เดินทางวันแรก 17,113 ไมล์ทะเล วันที่สองเดิน 11,764 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":28877,"choices":[28867,27877,28877,28777],"_op":"add","_a":17113,"_b":11764},{"text":"ห้องเก็บสินค้ามี 38 แถว แถวละ 364 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":13832,"choices":[13832,4004,13468,14196],"_op":"mul","_a":364,"_b":38},{"text":"คลังสมบัติมีเหรียญ 67,257 เบรี โจรงัดแงะไปได้ 20,835 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":46422,"choices":[46522,46432,46422,47422],"_op":"sub","_a":67257,"_b":20835},{"text":"กองทัพบากี้ออกรบ 80,601 นาย กลับมา 486 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":80115,"choices":[80125,80215,81115,80115],"_op":"sub","_a":80601,"_b":486},{"text":"เสบียง 33,607 กิโลกรัม พอสำหรับ 7 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":4801,"choices":[7,4802,4801,4800],"_op":"div","_a":33607,"_b":7},{"text":"สโมเกอร์เดินทางวันแรก 89,503 ไมล์ทะเล วันที่สองเดิน 1,517 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":91020,"choices":[90920,91020,91010,90020],"_op":"add","_a":89503,"_b":1517},{"text":"ลูฟี่มีเสบียง 97,102 กิโลกรัม แจกจ่ายให้ลูกเรือไป 2,119 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":94983,"choices":[94983,94993,95983,95083],"_op":"sub","_a":97102,"_b":2119},{"text":"เงินรางวัล 16,232 เบรี แบ่งให้ผู้ชนะ 4 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":4058,"choices":[4058,4057,4,4059],"_op":"div","_a":16232,"_b":4},{"text":"ลูกเรือ 7 คน แต่ละคนได้รับค่าจ้างคนละ 5,883 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":41181,"choices":[41181,45308,47064,35298],"_op":"mul","_a":5883,"_b":7},{"text":"คลังโล้คทาวน์มีเสบียง 10,659 กิโลกรัม รับของเพิ่มมาอีก 37,633 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":48292,"choices":[48282,48292,47292,48192],"_op":"add","_a":10659,"_b":37633},{"text":"ห้องเก็บสินค้ามี 5 แถว แถวละ 6,633 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":33165,"choices":[39798,33165,36604,26532],"_op":"mul","_a":6633,"_b":5},{"text":"สโมเกอร์เดินทางวันแรก 38,939 ไมล์ทะเล วันที่สองเดิน 40,528 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":79467,"choices":[79367,78467,79457,79467],"_op":"add","_a":38939,"_b":40528},{"text":"คลังสมบัติมีเหรียญ 98,446 เบรี โจรงัดแงะไปได้ 52,506 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":45940,"choices":[45940,46040,45950,46940],"_op":"sub","_a":98446,"_b":52506},{"text":"เรือออกเดินทางจากท่าแรก 48,096 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 44,119 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":92215,"choices":[92205,92215,92115,91215],"_op":"add","_a":48096,"_b":44119},{"text":"สินค้า 44,073 กิโลกรัม แจกจ่ายลงเรือ 9 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":4897,"choices":[4897,9,4896,4898],"_op":"div","_a":44073,"_b":9},{"text":"เรือออกเดินทางจากท่าแรก 23,113 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 18,786 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":41899,"choices":[41889,40899,41799,41899],"_op":"add","_a":23113,"_b":18786},{"text":"ระยะทางจากต้นทางถึงปลายทาง 69,567 ไมล์ทะเล สโมเกอร์เดินมาแล้ว 21,618 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":47949,"choices":[48049,47959,47949,48949],"_op":"sub","_a":69567,"_b":21618},{"text":"ห้องเก็บสินค้ามี 32 แถว แถวละ 927 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":29664,"choices":[4635,30591,29664,28737],"_op":"mul","_a":927,"_b":32},{"text":"ทหาร 21,090 นาย จัดเข้าหมวด 5 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":4218,"choices":[4217,4219,4218,5],"_op":"div","_a":21090,"_b":5},{"text":"แบ่งสมบัติ 15,132 ชิ้น ให้ลูกเรือ 4 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":3783,"choices":[3784,3783,4,3782],"_op":"div","_a":15132,"_b":4},{"text":"สินค้า 22,221 กิโลกรัม แจกจ่ายลงเรือ 9 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":2469,"choices":[2468,9,2469,2470],"_op":"div","_a":22221,"_b":9},{"text":"เรือ 53 ลำ ลำหนึ่งบรรทุกได้ 279 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":14787,"choices":[15066,14508,2232,14787],"_op":"mul","_a":279,"_b":53},{"text":"เรือ 58 ลำ ลำหนึ่งบรรทุกได้ 369 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":21402,"choices":[21402,21771,4797,21033],"_op":"mul","_a":369,"_b":58},{"text":"กองเรือบากี้มี 86,769 ลำ ถูกทำลายไป 38,038 ลำ เหลือเรือที่ยังใช้งานได้กี่ลำ?","ans":48731,"choices":[48741,48831,49731,48731],"_op":"sub","_a":86769,"_b":38038},{"text":"ลูฟี่เก็บเปลือกหอยได้ 81,233 ชิ้น สโมเกอร์เก็บเพิ่มให้อีก 17,784 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":99017,"choices":[98017,98917,99007,99017],"_op":"add","_a":81233,"_b":17784},{"text":"ระยะทางจากต้นทางถึงปลายทาง 39,769 ไมล์ทะเล สโมเกอร์เดินมาแล้ว 19,420 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":20349,"choices":[21349,20449,20359,20349],"_op":"sub","_a":39769,"_b":19420},{"text":"ลูกเรือ 35 คน แต่ละคนได้รับค่าจ้างคนละ 506 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":17710,"choices":[4048,18216,17710,17204],"_op":"mul","_a":506,"_b":35},{"text":"ทหาร 11,308 นาย จัดเข้าหมวด 4 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":2827,"choices":[4,2826,2828,2827],"_op":"div","_a":11308,"_b":4},{"text":"สินค้า 43,614 กิโลกรัม แจกจ่ายลงเรือ 9 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":4846,"choices":[4846,4845,4847,9],"_op":"div","_a":43614,"_b":9},{"text":"ระยะทางจากต้นทางถึงปลายทาง 40,875 ไมล์ทะเล สโมเกอร์เดินมาแล้ว 2,159 ไมล์ทะเล อีกกี่ไมล์ทะเลถึงจะถึงจุดหมาย?","ans":38716,"choices":[38716,38726,38816,39716],"_op":"sub","_a":40875,"_b":2159},{"text":"ราคาสมบัติชิ้นละ 784 เบรี ซื้อมา 25 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":19600,"choices":[19600,18816,5488,20384],"_op":"mul","_a":784,"_b":25},{"text":"โล้คทาวน์เก็บภาษีได้ 16,586 เบรี ใช้จ่ายซ่อมกำแพง 753 เบรี เหลือในคลังกี่เบรี?","ans":15833,"choices":[15933,15843,16833,15833],"_op":"sub","_a":16586,"_b":753},{"text":"ลูฟี่วิ่งได้ 954 เมตรต่อนาที วิ่งนาน 59 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":56286,"choices":[57240,13356,56286,55332],"_op":"mul","_a":954,"_b":59},{"text":"กองทัพบากี้ออกรบ 58,380 นาย กลับมา 19,357 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":39023,"choices":[39023,39033,39123,40023],"_op":"sub","_a":58380,"_b":19357},{"text":"สินค้า 19,560 กิโลกรัม แจกจ่ายลงเรือ 8 ลำ ให้เท่ากันทุกลำ ลำละกี่กิโลกรัม?","ans":2445,"choices":[2445,8,2444,2446],"_op":"div","_a":19560,"_b":8},{"text":"ลูฟี่เก็บเปลือกหอยได้ 75,776 ชิ้น สโมเกอร์เก็บเพิ่มให้อีก 4,653 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":80429,"choices":[80429,79429,80329,80419],"_op":"add","_a":75776,"_b":4653},{"text":"ทหาร 11,196 นาย จัดเข้าหมวด 6 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":1866,"choices":[1867,6,1865,1866],"_op":"div","_a":11196,"_b":6},{"text":"ทหาร 11,121 นาย จัดเข้าหมวด 3 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":3707,"choices":[3707,3,3706,3708],"_op":"div","_a":11121,"_b":3},{"text":"เงินรางวัล 33,885 เบรี แบ่งให้ผู้ชนะ 9 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":3765,"choices":[3764,3765,9,3766],"_op":"div","_a":33885,"_b":9},{"text":"ทหาร 8,728 นาย จัดเข้าหมวด 8 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":1091,"choices":[1090,1091,1092,8],"_op":"div","_a":8728,"_b":8},{"text":"ลูฟี่ฝึกซ้อม 3,207 ครั้งต่อวัน ใน 2 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":6414,"choices":[6414,5759,3207,9621],"_op":"mul","_a":3207,"_b":2},{"text":"เสบียง 27,632 กิโลกรัม พอสำหรับ 8 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":3454,"choices":[3455,3453,3454,8],"_op":"div","_a":27632,"_b":8},{"text":"เงินรางวัล 5,661 เบรี แบ่งให้ผู้ชนะ 3 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":1887,"choices":[1886,1888,3,1887],"_op":"div","_a":5661,"_b":3},{"text":"เงินรางวัล 22,005 เบรี แบ่งให้ผู้ชนะ 5 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":4401,"choices":[5,4400,4402,4401],"_op":"div","_a":22005,"_b":5},{"text":"โล้คทาวน์มีคนอยู่ 91,685 คน มีเด็กเกิดใหม่ 4,433 คน ทะเบียนราษฎร์บันทึกว่ากี่คน?","ans":96118,"choices":[96118,96018,95118,96108],"_op":"add","_a":91685,"_b":4433},{"text":"เงินรางวัล 12,745 เบรี แบ่งให้ผู้ชนะ 5 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":2549,"choices":[2550,2549,5,2548],"_op":"div","_a":12745,"_b":5},{"text":"ลูฟี่ฝึกซ้อม 4,315 ครั้งต่อวัน ใน 8 วัน ซ้อมทั้งหมดกี่ครั้ง?","ans":34520,"choices":[30205,34520,31955,38835],"_op":"mul","_a":4315,"_b":8},{"text":"เงินรางวัล 4,143 เบรี แบ่งให้ผู้ชนะ 3 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":1381,"choices":[1382,3,1381,1380],"_op":"div","_a":4143,"_b":3},{"text":"ห้องเก็บสินค้ามี 55 แถว แถวละ 893 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":49115,"choices":[49115,50008,8930,48222],"_op":"mul","_a":893,"_b":55},{"text":"ลูฟี่มีลูกธนู 79,944 ดอก ยิงออกไป 28,212 ดอก กระบอกธนูเหลืออีกกี่ดอก?","ans":51732,"choices":[51832,51732,52732,51742],"_op":"sub","_a":79944,"_b":28212},{"text":"กองทัพบากี้ออกรบ 87,707 นาย กลับมา 45,759 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":41948,"choices":[41948,42948,42048,41958],"_op":"sub","_a":87707,"_b":45759},{"text":"ทหาร 37,224 นาย จัดเข้าหมวด 9 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":4136,"choices":[4135,9,4137,4136],"_op":"div","_a":37224,"_b":9},{"text":"ลูฟี่นับเงินในกระเป๋าได้ 43,791 เบรี แล้วพบอีกกองใต้เตียงมีอยู่ 12,487 เบรี ตอนนี้มีเงินอยู่กี่เบรี?","ans":56278,"choices":[56268,55278,56278,56178],"_op":"add","_a":43791,"_b":12487},{"text":"คลังโล้คทาวน์มีเสบียง 78,126 กิโลกรัม รับของเพิ่มมาอีก 335 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":78461,"choices":[78361,77461,78461,78451],"_op":"add","_a":78126,"_b":335},{"text":"เรือออกเดินทางจากท่าแรก 63,588 ไมล์ทะเล จากนั้นเบี่ยงเส้นทางอีก 23,841 ไมล์ทะเล เดินทางมาแล้วกี่ไมล์ทะเล?","ans":87429,"choices":[87329,87429,86429,87419],"_op":"add","_a":63588,"_b":23841},{"text":"ราคาสมบัติชิ้นละ 5,281 เบรี ซื้อมา 8 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":42248,"choices":[42248,47529,36967,47204],"_op":"mul","_a":5281,"_b":8},{"text":"ลูฟี่เก็บเปลือกหอยได้ 36,698 ชิ้น สโมเกอร์เก็บเพิ่มให้อีก 27,181 ชิ้น มีเปลือกหอยทั้งหมดกี่ชิ้น?","ans":63879,"choices":[62879,63869,63879,63779],"_op":"add","_a":36698,"_b":27181},{"text":"เรือบรรทุกสินค้า 43,263 ตัน แวะท่าเรือรับสินค้าเพิ่ม 20,196 ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?","ans":63459,"choices":[63449,62459,63459,63359],"_op":"add","_a":43263,"_b":20196},{"text":"เรือ 54 ลำ ลำหนึ่งบรรทุกได้ 975 กิโลกรัม ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่กิโลกรัม?","ans":52650,"choices":[51675,53625,8775,52650],"_op":"mul","_a":975,"_b":54},{"text":"คลังโล้คทาวน์มีเสบียง 23,143 กิโลกรัม รับของเพิ่มมาอีก 14,154 กิโลกรัม นับทั้งหมดได้กี่กิโลกรัม?","ans":37297,"choices":[36297,37297,37287,37197],"_op":"add","_a":23143,"_b":14154},{"text":"ลูกเรือ 8 คน แต่ละคนได้รับค่าจ้างคนละ 3,633 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":29064,"choices":[32166,32697,25431,29064],"_op":"mul","_a":3633,"_b":8},{"text":"กองทัพบากี้ออกรบ 89,175 นาย กลับมา 28,632 นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?","ans":60543,"choices":[60643,60543,60553,61543],"_op":"sub","_a":89175,"_b":28632},{"text":"ลูกเรือ 17 คน แต่ละคนได้รับค่าจ้างคนละ 479 เบรี กัปตันต้องจ่ายเงินเดือนรวมกี่เบรี?","ans":8143,"choices":[7664,8622,3832,8143],"_op":"mul","_a":479,"_b":17},{"text":"เดินทาง 4 วัน วันละ 1,941 ไมล์ทะเล รวมระยะทางทั้งหมดกี่ไมล์ทะเล?","ans":7764,"choices":[7732,7764,5823,9705],"_op":"mul","_a":1941,"_b":4},{"text":"เสบียง 5,685 กิโลกรัม พอสำหรับ 5 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":1137,"choices":[5,1136,1138,1137],"_op":"div","_a":5685,"_b":5},{"text":"ทหาร 4,946 นาย จัดเข้าหมวด 2 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":2473,"choices":[2473,2474,2,2472],"_op":"div","_a":4946,"_b":2},{"text":"ราคาสมบัติชิ้นละ 382 เบรี ซื้อมา 37 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":14134,"choices":[14516,13752,3820,14134],"_op":"mul","_a":382,"_b":37},{"text":"แบ่งสมบัติ 8,036 ชิ้น ให้ลูกเรือ 2 คน เท่าๆ กัน คนละกี่ชิ้น?","ans":4018,"choices":[4018,4017,4019,2],"_op":"div","_a":8036,"_b":2},{"text":"ลูฟี่วิ่งได้ 6,703 เมตรต่อนาที วิ่งนาน 7 นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?","ans":46921,"choices":[53624,40218,44998,46921],"_op":"mul","_a":6703,"_b":7},{"text":"สโมเกอร์เดินทางวันแรก 85,354 ไมล์ทะเล วันที่สองเดิน 176 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":85530,"choices":[84530,85520,85430,85530],"_op":"add","_a":85354,"_b":176},{"text":"ราคาสมบัติชิ้นละ 2,185 เบรี ซื้อมา 6 ชิ้น ใบเสร็จระบุยอดรวมกี่เบรี?","ans":13110,"choices":[12016,10925,15295,13110],"_op":"mul","_a":2185,"_b":6},{"text":"เงินรางวัล 44,604 เบรี แบ่งให้ผู้ชนะ 9 คน ได้รับคนละเท่ากัน คนละกี่เบรี?","ans":4956,"choices":[4956,4955,9,4957],"_op":"div","_a":44604,"_b":9},{"text":"เดินทาง 41 วัน วันละ 894 ไมล์ทะเล รวมระยะทางทั้งหมดกี่ไมล์ทะเล?","ans":36654,"choices":[37548,36654,4470,35760],"_op":"mul","_a":894,"_b":41},{"text":"ห้องเก็บสินค้ามี 16 แถว แถวละ 364 ชิ้น สินค้าทั้งหมดมีกี่ชิ้น?","ans":5824,"choices":[2548,5824,6188,5460],"_op":"mul","_a":364,"_b":16},{"text":"โล้คทาวน์เก็บภาษีได้ 51,883 เบรี ใช้จ่ายซ่อมกำแพง 13,614 เบรี เหลือในคลังกี่เบรี?","ans":38269,"choices":[38279,38369,38269,39269],"_op":"sub","_a":51883,"_b":13614},{"text":"ลูฟี่แบ่งสมบัติ 10,880 เบรี ออกเป็น 5 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":2176,"choices":[2176,2177,5,2175],"_op":"div","_a":10880,"_b":5},{"text":"ทหาร 9,813 นาย จัดเข้าหมวด 3 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":3271,"choices":[3272,3270,3,3271],"_op":"div","_a":9813,"_b":3},{"text":"สโมเกอร์เดินทางวันแรก 38,647 ไมล์ทะเล วันที่สองเดิน 58,709 ไมล์ทะเล ระยะทางทั้งสองวันรวมกันเป็นกี่ไมล์ทะเล?","ans":97356,"choices":[96356,97256,97356,97346],"_op":"add","_a":38647,"_b":58709},{"text":"ทหาร 36,171 นาย จัดเข้าหมวด 9 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":4019,"choices":[4020,9,4019,4018],"_op":"div","_a":36171,"_b":9},{"text":"แต่ละกล่องบรรจุสมบัติ 5,348 กิโลกรัม มี 5 กล่อง นับของในคลังได้กี่กิโลกรัม?","ans":26740,"choices":[21392,26740,32088,25193],"_op":"mul","_a":5348,"_b":5},{"text":"ลูฟี่แบ่งสมบัติ 16,760 เบรี ออกเป็น 4 ส่วนเท่าๆ กัน แต่ละส่วนมีกี่เบรี?","ans":4190,"choices":[4190,4189,4191,4],"_op":"div","_a":16760,"_b":4},{"text":"คลังสมบัติมีเหรียญ 90,955 เบรี โจรงัดแงะไปได้ 534 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":90421,"choices":[90521,90421,91421,90431],"_op":"sub","_a":90955,"_b":534},{"text":"เสบียง 42,102 กิโลกรัม พอสำหรับ 9 วัน กินเท่ากันทุกวัน วันละกี่กิโลกรัม?","ans":4678,"choices":[4679,9,4677,4678],"_op":"div","_a":42102,"_b":9},{"text":"ทหาร 15,774 นาย จัดเข้าหมวด 6 หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?","ans":2629,"choices":[2630,6,2628,2629],"_op":"div","_a":15774,"_b":6},{"text":"คลังสมบัติมีเหรียญ 73,194 เบรี โจรงัดแงะไปได้ 35,539 เบรี เจ้าหน้าที่นับเหรียญที่เหลือได้กี่เบรี?","ans":37655,"choices":[37655,37665,37755,38655],"_op":"sub","_a":73194,"_b":35539},{"text":"ลูฟี่มีเสบียง 70,425 กิโลกรัม แจกจ่ายให้ลูกเรือไป 7,988 กิโลกรัม เสบียงที่เหลือมีกี่กิโลกรัม?","ans":62437,"choices":[62537,63437,62447,62437],"_op":"sub","_a":70425,"_b":7988}]};
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+const G={
+  name:'',ch:0,qi:0,hp:3,
+  chSc:0,totSc:0,
+  done:Array(7).fill(false),
+  stars:Array(7).fill(0),
+  bestSc:Array(7).fill(0),   // คะแนนสูงสุดต่อด่าน
+  qs:[],sel:null,phase:'idle',
+  mOn:true
+};
+
+// ══════════════════════════════════════════════
+//  CHAPTER DATA
+// ══════════════════════════════════════════════
+const CH=[
+  {n:'🏝️ หมู่บ้านฟูชา',sub:'ลูฟี่ & แชงค์ส',ico:'🏝️',diff:'⭐',
+   qt:['a3','s3','m1','a3','s3','a3','m1','s3','a4','m1'],
+   ctx:['ลูฟี่','แชงค์ส','โจรภูเขา','หมู่บ้านฟูชา','จ้าวทะเล','เบรี','กิโลกรัม','กิโลเมตร','ปลา','เสบียง'],
+   story:`<strong>ลูฟี่</strong> เด็กหนุ่มผู้ฝันอยากเป็นราชาโจรสลัด ประกาศก้องต่อหน้า <strong>แชงค์ส</strong> ว่าจะออกทะเลและเป็นราชาโจรสลัดให้ได้! แชงค์สหัวเราะร่วนพร้อมล้อเลียนเจ้าหนูยางยืดที่ว่ายน้ำไม่ได้
+
+วันหนึ่งเหตุการณ์ไม่คาดฝันเกิดขึ้น เมื่อกลุ่ม<strong>โจรภูเขา</strong>บุกมาที่บาร์ของมักกิ้นะ ลูฟี่ถูกโยนลงน้ำกลางทะเล <strong>จ้าวทะเล</strong> สัตว์ร้ายขนาดยักษ์พุ่งเข้าจู่โจม! แชงค์สกระโดดช่วยลูฟี่ไว้ได้ทัน แต่ต้องแลกด้วย <strong>แขนซ้าย</strong> ที่สูญเสียไป
+
+แชงค์สมอบ <strong>หมวกฟาง</strong> อันล้ำค่าพร้อมคำสัญญาว่า เมื่อกลายเป็นโจรสลัดที่ยิ่งใหญ่แล้ว ให้เอาหมวกคืนมา...
+
+สิบปีผ่านไป ลูฟี่เติบโตขึ้น เขาออกเดินทางด้วยเรือสายเล็กพร้อมเสบียง มุ่งหน้าสู่ทะเลกว้าง — <strong>ช่วยลูฟี่คำนวณเสบียงและทรัพยากรเพื่อเริ่มต้นการผจญภัย!</strong>`
+  },
+  {n:'⚓ เชลล์สทาวน์',sub:'โซโร vs มอร์แกน',ico:'⚓',diff:'⭐⭐',
+   qt:['a4','s4','m1','a4','s3','m2','a4','s4','m1','a3'],
+   ctx:['ลูฟี่','โซโร','มอร์แกน','เชลล์สทาวน์','เลเมปโป','เบรี','กิโลกรัม','เมตร','ดาบ','กระสุน'],
+   story:`<strong>ลูฟี่</strong>เดินทางมาถึงฐานทัพเรือเชลล์สทาวน์ ที่นี่เขาได้ยินข่าวลือเกี่ยวกับ <strong>โรโรโนอา โซโร</strong> นักล่าโจรสลัดสุดโหดที่ถูกมัดไว้กลางลานประหาร!
+
+<strong>โซโร</strong>ยอมถูกจับเพื่อปกป้องเด็กหญิงผู้หนึ่งจากความเอาแต่ใจของ <strong>เลเมปโป</strong> ลูกชายจอมแสบ ฐานทัพนี้ปกครองด้วย <strong>มอร์แกน มือขวาน</strong> ที่บังคับให้ทหารสร้างรูปปั้นยักษ์ของตนเอง
+
+ลูฟี่ตัดสินใจบุกเข้าไปเพื่อนำดาบ 3 เล่มของโซโรกลับคืนมา การต่อสู้เพื่อเสรีภาพ vs อำนาจมืดเริ่มขึ้น!
+
+<strong>มาช่วยลูฟี่และโซโรคำนวณกำลังรบเพื่อพิชิตฐานทัพ!</strong>`
+  },
+  {n:'🍊 ออเรนจ์ทาวน์',sub:'นามิ vs บากี้',ico:'🍊',diff:'⭐⭐',
+   qt:['a4','s4','m2','a4','s4','m2','a5','s4','m2','a4'],
+   ctx:['นามิ','บากี้','ลูฟี่','ออเรนจ์ทาวน์','ชูชู','เบรี','กิโลกรัม','กิโลเมตร','แผนที่','สมบัติ'],
+   story:`ลูฟี่และโซโรเดินทางมาถึงเกาะที่มีเสียงปืนใหญ่ดังสนั่น <strong>บากี้ โจรสลัดตัวตลก</strong> ยึดเมืองออเรนจ์ทาวน์ ทำให้ชาวบ้านต้องหนีไปซ่อนตัวบนเนินเขา
+
+ที่นี่พวกเขาพบ <strong>นามิ</strong> เด็กสาวนักเดินเรือที่กำลังขโมยสมบัติจากบากี้อยู่ นามิเกลียดชังโจรสลัดแต่กลับเข้าร่วมทีมชั่วคราว
+
+มีเพียง <strong>ชูชู</strong> สุนัขตัวน้อยที่ยังเฝ้าร้านอาหารของเจ้านายที่จากไปอย่างซื่อสัตย์ สิ่งนี้ทำให้ลูฟี่ประทับใจและตัดสินใจจัดการกับบากี้!
+
+<strong>นามิต้องคำนวณทิศทางลมและแผนที่ มาช่วยเธอกัน!</strong>`
+  },
+  {n:'🏹 ไซรัปวิลเลจ',sub:'อุซซัป vs คาปเตนคูโร',ico:'🏹',diff:'⭐⭐⭐',
+   qt:['a4','s4','m2','d1','a5','s4','m2','d1','a4','s5'],
+   ctx:['อุซซัป','คายะ','คาปเตนคูโร','ไซรัปวิลเลจ','โกอิ้งแมรี่','เบรี','กิโลกรัม','ไมล์ทะเล','น้ำมัน','เสบียง'],
+   story:`เรือเล็กของลูฟี่มาถึงหมู่บ้านไซรัป ที่นี่มี <strong>อุซซัป</strong> เด็กหนุ่มจอมโกหกที่ชอบวิ่งตะโกนว่า "โจรสลัดมาแล้ว!" เพื่อให้ <strong>คุณหนูคายะ</strong> ได้หัวเราะ
+
+แต่ความจริงที่เขาค้นพบกลับน่ากลัว — <strong>คาปเตนคูโร</strong> โจรสลัดจอมเจ้าเล่ห์ปลอมตัวเป็นผู้ดูแลบ้าน เพื่อขโมยมรดกและสังหารคายะ!
+
+อุซซัปพยายามเตือนชาวบ้านแต่ไม่มีใครเชื่อ ลูฟี่เห็นถึงความรักหมู่บ้านของอุซซัปจึงตกลงช่วยต่อสู้
+
+รางวัลที่ได้คือ <strong>เรือโกอิ้งแมรี่</strong> ที่จะพาพวกเขาสู่ดินแดนใหม่! <strong>มาช่วยอุซซัปคำนวณกลยุทธ์!</strong>`
+  },
+  {n:'🍳 บาราตีเอ',sub:'แซนจิ vs ดอน ครีค',ico:'🍳',diff:'⭐⭐⭐',
+   qt:['a5','s5','m2','d1','a5','s5','m3','d1','a5','s5'],
+   ctx:['แซนจิ','ดอน ครีค','มิฮอว์ค','บาราตีเอ','ลูฟี่','เบรี','กิโลกรัม','ไมล์ทะเล','จาน','วัตถุดิบ'],
+   story:`ท่ามกลางท้องทะเลกว้าง มีอาคารรูปปลาขนาดยักษ์ลอยลำอยู่ นั่นคือ <strong>บาราตีเอ</strong> ร้านอาหารลอยน้ำในตำนาน!
+
+ลูฟี่มาที่นี่เพื่อหา <strong>แซนจิ</strong> กุ๊กหนุ่มฝีมือเลิศผู้มีหัวใจที่ไม่ยอมให้ใครหิวโหย แต่ความวุ่นวายเกิดขึ้นเมื่อกองเรือของ <strong>ดอน ครีค</strong> มายึดบาราตีเอ!
+
+สถานการณ์ตึงเครียดเมื่อ <strong>มิฮอว์ค</strong> นักดาบอันดับหนึ่งของโลกปรากฏตัว โซโรต้องเผชิญหน้ากับเป้าหมายสูงสุด!
+
+<strong>ช่วยแซนจิคำนวณวัตถุดิบและพลังต่อสู้เพื่อปกป้องบาราตีเอ!</strong>`
+  },
+  {n:'🌊 โคโคยาชิ',sub:'นามิ vs อาร์ลอง',ico:'🌊',diff:'⭐⭐⭐⭐',
+   qt:['a5','s5','m3','d2','a5','s5','m3','d2','a5','s5'],
+   ctx:['นามิ','อาร์ลอง','เบลเมล','โคโคยาชิ','ลูฟี่','เบรี','กิโลกรัม','ไมล์ทะเล','ส้ม','เสบียง'],
+   story:`<strong>นามิ</strong>หนีไปพร้อมเรือแมรี่ ลูฟี่และพวกตามมาจนถึงหมู่บ้านโคโคยาชิ ที่นั่นพวกเขาค้นพบความจริงอันเจ็บปวด
+
+นามิต้องสะสมเงิน 100 ล้านเบรีเพื่อซื้อหมู่บ้านคืนจาก <strong>อาร์ลอง</strong> มนุษย์ปลาผู้โหดร้าย แต่อาร์ลองกลับสั่งให้ทหารเรือมายึดเงินที่นามิสะสมมาตลอด 8 ปี!
+
+นามิกรีดร้องและใช้มีดกรีดรอยสักของอาร์ลองบนแขนตัวเอง ลูฟี่เดินเข้ามาหยุดมือเธอไว้ <strong>"ลูฟี่... ช่วยฉันด้วย"</strong> ลูฟี่สวมหมวกฟางให้เธอและมุ่งบุกอาร์ลองพาร์ค!
+
+<strong>มาช่วยนามิคำนวณเพื่อปลดปล่อยหมู่บ้าน!</strong>`
+  },
+  {n:'⚡ โล้คทาวน์',sub:'สโมเกอร์ & ตอนจบอีสต์บลู',ico:'⚡',diff:'⭐⭐⭐⭐⭐',
+   qt:['a5','s5','m3','d2','a5','s5','m4','d2','a5','s5'],
+   ctx:['ลูฟี่','สโมเกอร์','บากี้','โล้คทาวน์','โรเจอร์','เบรี','กิโลกรัม','ไมล์ทะเล','ลัง','สมบัติ'],
+   story:`เป้าหมายสุดท้ายของอีสต์บลูคือ <strong>โล้คทาวน์</strong> เมืองที่ราชาโจรสลัด <strong>โกล ดี โรเจอร์</strong> ถูกประหารชีวิต ลูฟี่มาที่นี่เพื่อดูแท่นประหารจุดเริ่มต้นของยุคโจรสลัด!
+
+แต่เขาต้องเผชิญหน้ากับ <strong>ผู้พันสโมเกอร์</strong> ผู้มีพลังควันที่ไม่เคยปล่อยให้โจรสลัดหนีรอดได้ และยังถูก <strong>บากี้</strong> กับ <strong>อัลบีดา</strong> ตามล่าอีกด้วย!
+
+วินาทีที่คมดาบกำลังจะฟันลงมา ลูฟี่ยิ้มกว้างและกล่าวว่า <strong>"ฉันต้องตายแล้วเหรอเนี่ย"</strong> ทันใดนั้นสายฟ้าฟาดลงมาที่แท่นประหารราวกับปาฏิหาริย์!
+
+กลุ่มหมวกฟางรีบหนีมุ่งหน้าสู่แกรนด์ไลน์ — <strong>การผจญภัยที่แท้จริงกำลังจะเริ่มขึ้น! ทำโจทย์สุดท้ายเพื่อออกจากอีสต์บลู!</strong>`
+  }
+];
+
+// ══════════════════════════════════════════════
+//  QUESTION GENERATORS
+// ══════════════════════════════════════════════
+function R(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function fmt(n){return n.toLocaleString('th-TH');}
+
+function genA(d,ci){
+  const lo=Math.pow(10,d-1),hi=Math.pow(10,d)-1;
+  const a=R(lo,hi-100),b=R(100,Math.min(hi-a,Math.floor(hi*.6)));
+  const ans=a+b;
+  const c=CH[ci].ctx;
+  const ts=[
+    `${c[0]}นับเงินในกระเป๋าได้ ${fmt(a)} ${c[5]} แล้วพบอีกกองหนึ่งใต้เตียงมีอยู่ ${fmt(b)} ${c[5]} ตอนนี้มีเงินอยู่กี่${c[5]}?`,
+    `เรือออกเดินทางจากท่าแรก ${fmt(a)} ${c[7]} จากนั้นเบี่ยงเส้นทางอีก ${fmt(b)} ${c[7]} เข็มทิศบอกว่าเดินทางมาแล้วกี่${c[7]}?`,
+    `${c[3]}มีคนอยู่ ${fmt(a)} คน ข้ามเดือนมามีเด็กเกิดใหม่ ${fmt(b)} คน ทะเบียนราษฎร์บันทึกว่ากี่คน?`,
+    `โกดังเก็บสินค้า ${fmt(a)} ${c[6]} พ่อค้านำของมาฝากเพิ่ม ${fmt(b)} ${c[6]} ตาชั่งวัดได้กี่${c[6]}?`,
+    `${c[1]}เดินทางวันแรก ${fmt(a)} ${c[7]} วันที่สองเดิน ${fmt(b)} ${c[7]} ระยะทางบนแผนที่ทั้งสองวันรวมกันเป็นกี่${c[7]}?`,
+    `เรือบรรทุกสินค้า ${fmt(a)} ตัน แวะท่าเรือรับสินค้าเพิ่ม ${fmt(b)} ตัน กัปตันรายงานน้ำหนักบรรทุกกี่ตัน?`,
+  ];
+  return {text:ts[R(0,ts.length-1)],ans,_a:a,_b:b,_op:'add'};
+}
+
+function genS(d,ci){
+  const lo=Math.pow(10,d-1),hi=Math.pow(10,d)-1;
+  const a=R(lo+500,hi),b=R(100,Math.min(a-100,Math.floor(a*.55)));
+  const ans=a-b;
+  const c=CH[ci].ctx;
+  const ts=[
+    `คลังสมบัติมีเหรียญ ${fmt(a)} ${c[5]} โจรงัดแงะไปได้ ${fmt(b)} ${c[5]} เจ้าหน้าที่นับเหรียญที่เหลือได้กี่${c[5]}?`,
+    `กองทัพ ${c[2]} ออกรบ ${fmt(a)} นาย กลับมา ${fmt(b)} นายบาดเจ็บออกจากแถว ยังคงเหลือพร้อมรบกี่นาย?`,
+    `เรือออกเดินทาง ${fmt(a)} ตัน ส่งสินค้าลงท่า ${fmt(b)} ตัน เรือยังแบกน้ำหนักอยู่กี่ตัน?`,
+    `${c[0]}มีลูกธนู ${fmt(a)} ดอก ยิงออกไป ${fmt(b)} ดอก กระบอกธนูเหลืออีกกี่ดอก?`,
+    `ระยะทางจากต้นทางถึงปลายทาง ${fmt(a)} ${c[7]} ${c[1]}เดินมาแล้ว ${fmt(b)} ${c[7]} อีกกี่${c[7]}ถึงจะถึงจุดหมาย?`,
+    `${c[3]}เก็บภาษีได้ ${fmt(a)} ${c[5]} ใช้จ่ายซ่อมกำแพง ${fmt(b)} ${c[5]} เหลือในคลังกี่${c[5]}?`,
+  ];
+  return {text:ts[R(0,ts.length-1)],ans,_a:a,_b:b,_op:'sub'};
+}
+
+function genM(tier,ci){
+  let a,b;
+  if(tier===1){a=R(100,999);b=R(2,9);}
+  else if(tier===2){a=R(100,999);b=R(11,49);}
+  else if(tier===3){a=R(1000,9999);b=R(2,9);}
+  else{a=R(100,999);b=R(12,59);}
+  const ans=a*b;
+  const c=CH[ci].ctx;
+  const ts=[
+    `ลูกเรือ ${fmt(b)} คน แต่ละคนได้รับค่าจ้างคนละ ${fmt(a)} ${c[5]} กัปตันต้องจ่ายเงินเดือนรวมกี่${c[5]}?`,
+    `เรือ ${fmt(b)} ลำ ลำหนึ่งบรรทุกได้ ${fmt(a)} ตัน ถ้าทุกลำบรรทุกจนเต็ม น้ำหนักรวมกี่ตัน?`,
+    `โซโรฝึกท่าดาบ ${fmt(a)} ครั้งต่อวัน ใน ${fmt(b)} วัน ท่าดาบทั้งหมดที่ฝึกไปกี่ครั้ง?`,
+    `แต่ละกล่องบรรจุ${c[9]} ${fmt(a)} ${c[6]} มี ${fmt(b)} กล่อง นับของในคลังได้กี่${c[6]}?`,
+    `${c[0]}วิ่งได้ ${fmt(a)} เมตรต่อนาที วิ่งนาน ${fmt(b)} นาทีโดยไม่หยุด รวมระยะทางกี่เมตร?`,
+    `ราคา${c[9]}ชิ้นละ ${fmt(a)} ${c[5]} ซื้อมา ${fmt(b)} ชิ้น ใบเสร็จระบุยอดรวมกี่${c[5]}?`,
+  ];
+  return {text:ts[R(0,ts.length-1)],ans,_a:a,_b:b,_op:'mul'};
+}
+
+function genD(tier,ci){
+  const divisor=R(2,9);
+  const quot=tier===1?R(100,999):R(1000,4999);
+  const dividend=divisor*quot;
+  const c=CH[ci].ctx;
+  const ts=[
+    `${c[0]}แบ่งสมบัติ ${fmt(dividend)} ${c[5]} ออกเป็น ${divisor} ส่วนเท่าๆ กัน แต่ละส่วนมีกี่${c[5]}?`,
+    `ทหาร ${fmt(dividend)} นาย จัดเข้าหมวด ${divisor} หมวด หมวดละเท่ากัน แต่ละหมวดมีกี่นาย?`,
+    `สินค้า ${fmt(dividend)} ตัน แจกจ่ายลงเรือ ${divisor} ลำ ให้เท่ากันทุกลำ ลำละกี่ตัน?`,
+    `เงินรางวัล ${fmt(dividend)} ${c[5]} แบ่งให้ผู้ชนะ ${divisor} คน ได้รับคนละเท่ากัน คนละกี่${c[5]}?`,
+    `เสบียง ${fmt(dividend)} ${c[6]} พอสำหรับ ${divisor} วัน กินเท่ากันทุกวัน วันละกี่${c[6]}?`,
+  ];
+  return {text:ts[R(0,ts.length-1)],ans:quot,_a:dividend,_b:divisor,_op:'div'};
+}
+
+const QF={
+  a3:(ci)=>genA(3,ci),a4:(ci)=>genA(4,ci),a5:(ci)=>genA(5,ci),
+  s3:(ci)=>genS(3,ci),s4:(ci)=>genS(4,ci),s5:(ci)=>genS(5,ci),
+  m1:(ci)=>genM(1,ci),m2:(ci)=>genM(2,ci),m3:(ci)=>genM(3,ci),m4:(ci)=>genM(4,ci),
+  d1:(ci)=>genD(1,ci),d2:(ci)=>genD(2,ci)
+};
+
+function makeQs(ci){
+  // สุ่ม 10 ข้อจาก QBANK[ci] (100 ข้อ) โดยไม่ซ้ำ
+  const bank = QBANK[ci];
+  const pool = [...Array(bank.length).keys()];
+  // Fisher-Yates shuffle แล้วเลือก 10 แรก
+  for(let i=pool.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [pool[i],pool[j]]=[pool[j],pool[i]];
+  }
+  return pool.slice(0,10).map(idx=>{
+    const q=bank[idx];
+    return {text:q.text,ans:q.ans,choices:[...q.choices],_op:q._op,_a:q._a,_b:q._b};
+  });
+}
+
+function makeChoices(q){
+  const ans=q.ans,a=q._a,b=q._b,op=q._op;
+  const s=new Set([ans]);
+  const traps=[];
+
+  if(op==='add'){
+    // ลืม carry หลักหน่วย → ans - 10
+    traps.push(ans-10,ans-100,ans-1000);
+    // ทดผิดหลัก → ans + 10
+    traps.push(ans+10,ans+100);
+    // บวกเลขหลักใดหลักหนึ่งผิด ±1
+    traps.push(ans+1,ans-1,ans+9,ans-9);
+    // ลบแทนบวก (สับสนสัญลักษณ์)
+    if(a-b>0) traps.push(a-b);
+  } else if(op==='sub'){
+    // ยืมผิด → เพิ่ม 10, 100, 1000
+    traps.push(ans+10,ans+100,ans+1000);
+    // ลืมยืม → ans - 10
+    traps.push(ans-10,ans-100);
+    // กลับทิศการลบ (b-a)
+    if(b<a) traps.push(b-(a-Math.floor(a/10)*10)>0?b:a+b-2*ans);
+    // บวกแทนลบ
+    traps.push(a+b);
+    traps.push(ans+1,ans-1);
+  } else if(op==='mul'){
+    // คูณตัวคูณผิด ±1
+    traps.push(a*(b-1),a*(b+1));
+    // ลืม carry ในหลักสิบของตัวคูณ
+    if(b>=10) traps.push(a*Math.floor(b/10)+a*(b%10));
+    // คิดแค่หลักเดียวของ b
+    traps.push(a*(b%10||1));
+    // ผลลัพธ์ขาดหนึ่ง a
+    traps.push(ans-a,ans+a);
+  } else if(op==='div'){
+    // หารได้มากเกินไป/น้อยเกินไป ±1
+    traps.push(ans+1,ans-1);
+    // สับสน หาร b ด้วย quotient แทน
+    traps.push(b);
+    // quotient ± divisor
+    traps.push(ans+b,ans-b>0?ans-b:ans+b+1);
+    // คูณแทนหาร
+    traps.push(a*b);
+  }
+
+  // ใส่ traps ที่สมเหตุสมผล (>0 และไม่ซ้ำ ans)
+  for(const t of traps){
+    const v=Math.round(t);
+    if(v>0&&v!==ans&&s.size<4) s.add(v);
+  }
+
+  // เติมช่องที่เหลือด้วยตัวเลขใกล้เคียง
+  const range=Math.max(20,Math.floor(ans*.12));
+  let attempts=0;
+  while(s.size<4&&attempts++<300){
+    const w=ans+R(-range,range);
+    if(w>0&&w!==ans) s.add(w);
+  }
+
+  const arr=[...s];
+  for(let i=arr.length-1;i>0;i--){const j=R(0,i);[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+function show(id){
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(id==='slb') loadLB();
+  if(id==='sg') setTimeout(initCV,80);
+}
+
+function continueGame(){
+  document.getElementById('mpPlayer').textContent='👤 '+G.name;
+  document.getElementById('btnContinue').style.display='none';
+  renderMap();show('sm');
+  startMusic();
+}
+
+function goWelcome(){
+  // กลับหน้าแรกโดยไม่ reset — ถ้า login อยู่แล้วแสดงชื่อ+ปุ่มกลับแผนที่
+  if(G.name){
+    document.getElementById('inp').value=G.name;
+    document.getElementById('btnContinue').style.display='block';
+    document.getElementById('btnContinue').textContent=`🗺️ เล่นต่อในฐานะ ${G.name}`;
+  } else {
+    document.getElementById('inp').value='';
+    document.getElementById('btnContinue').style.display='none';
+  }
+  show('sw');
+}
+
+async function startGame(){
+  const n=document.getElementById('inp').value.trim();
+  if(!n){document.getElementById('inp').focus();return;}
+  const btn=document.querySelector('.btn-p');
+  if(btn){btn.disabled=true;btn.textContent='⏳ กำลังโหลด...';}
+  if(n !== G.name){
+    // ชื่อใหม่ → ลองโหลดข้อมูลเก่าจาก Firebase/localStorage
+    G.name=n;
+    const loaded = await loadProgress(n);
+    if(!loaded){
+      // ผู้เล่นใหม่ → reset
+      G.totSc=0;G.done.fill(false);G.stars.fill(0);G.bestSc.fill(0);
+      G.ch=0;G.qi=0;G.hp=3;G.chSc=0;
+    }
+  }
+  if(btn){btn.disabled=false;btn.textContent='🏴‍☠️ เริ่มการผจญภัย!';}
+  document.getElementById('inp').value=G.name;
+  document.getElementById('mpPlayer').textContent='👤 '+G.name;
+  document.getElementById('btnContinue').style.display='none';
+  renderMap();show('sm');
+  startMusic();
+}
+
+function switchPlayer(){
+  G.name='';G.totSc=0;G.ch=0;G.qi=0;G.hp=3;G.chSc=0;
+  G.done.fill(false);G.stars.fill(0);G.bestSc.fill(0);
+  document.getElementById('inp').value='';
+  document.getElementById('btnContinue').style.display='none';
+  show('sw');
+}
+
+function updateScoreDisplay(){
+  const scEl=document.getElementById('mpScore');
+  if(scEl) scEl.textContent=G.totSc>0?`⭐ คะแนนรวม: ${G.totSc} คะแนน`:'';
+  const tot=document.getElementById('gScoreTot');
+  if(tot) tot.textContent=G.totSc||'0';
+}
+
+function renderMap(){
+  const el=document.getElementById('mapList');
+  el.innerHTML='';
+  updateScoreDisplay();
+  CH.forEach((ch,i)=>{
+    const unl=i===0||G.done[i-1],dn=G.done[i],st=G.stars[i];
+    const d=document.createElement('div');
+    d.className='isl '+(dn?'done':unl?'unlocked':'locked');
+    d.innerHTML=`
+      <div class="isl-icon">${ch.ico}</div>
+      <div class="isl-info">
+        <div class="isl-name">ด่านที่ ${i+1}: ${ch.n}</div>
+        <div class="isl-sub">${ch.sub}</div>
+        <div class="isl-stars">${dn?'⭐'.repeat(st)+'☆'.repeat(3-st):ch.diff}</div>
+      </div>
+      <div class="isl-arrow">${dn?'✅':unl?'▶️':'🔒'}</div>`;
+    if(!d.classList.contains('locked')) d.onclick=()=>openStory(i);
+    el.appendChild(d);
+  });
+}
+
+function openStory(idx){
+  G.ch=idx;
+  const ch=CH[idx];
+  document.getElementById('sIcon').textContent=ch.ico+' ด่านที่ '+(idx+1);
+  document.getElementById('sTitle').textContent=ch.n+' — '+ch.sub;
+  document.getElementById('sBody').innerHTML=ch.story;
+  show('si');
+}
+
+function startCh(){
+  G.qi=0;G.hp=3;G.chSc=0;G.phase='idle';G.sel=null;
+  G.qs=makeQs(G.ch);
+  show('sg');
+  document.getElementById('gCh').textContent=CH[G.ch].n;
+  document.getElementById('gHearts').textContent='❤️❤️❤️';
+  document.getElementById('gScore').textContent='0';
+  document.getElementById('gScoreTot').textContent=G.totSc||'0';
+  document.getElementById('solBox').classList.remove('show');
+  renderQ();
+  setTimeout(initCV,80);
+}
+
+// ══════════════════════════════════════════════
+//  GAME LOGIC
+// ══════════════════════════════════════════════
+function renderQ(){
+  const q=G.qs[G.qi];
+  G.sel=null;G.phase='idle';
+  document.getElementById('solBox').classList.remove('show');
+  document.getElementById('gHearts').textContent='❤️'.repeat(G.hp)+'🖤'.repeat(3-G.hp);
+  document.getElementById('gQC').textContent=`ข้อ ${G.qi+1}/${G.qs.length}`;
+  document.getElementById('gScore').textContent=G.chSc;
+  document.getElementById('gProg').style.width=(G.qi/G.qs.length*100)+'%';
+  document.getElementById('qText').textContent=q.text;
+
+  const grid=document.getElementById('chGrid');
+  grid.innerHTML='';
+  q.choices.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='ch-btn';
+    b.textContent=fmt(c);
+    b.onclick=()=>selCh(b,c);
+    grid.appendChild(b);
+  });
+  setCfm('idle');
+}
+
+function selCh(btn,val){
+  if(G.phase==='ans') return;
+  document.querySelectorAll('.ch-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  G.sel=val;G.phase='sel';
+  setCfm('sel');
+}
+
+function setCfm(st){
+  const b=document.getElementById('cfmBtn');
+  if(st==='idle'){b.disabled=true;b.textContent='✓ ยืนยัน';b.className='cfm-btn';}
+  else if(st==='sel'){b.disabled=false;b.textContent='✓ ยืนยัน';b.className='cfm-btn cfm-idle';}
+  else if(st==='next'){b.disabled=false;b.textContent=G.qi<G.qs.length-1?'→ ข้อต่อไป':'🏆 สรุปผล';b.className='cfm-btn cfm-next';}
+}
+
+function onCfm(){
+  if(G.phase==='ans'){
+    G.qi++;
+    if(G.qi>=G.qs.length) endCh();
+    else renderQ();
+    return;
+  }
+  if(G.phase!=='sel') return;
+  G.phase='ans';
+  const q=G.qs[G.qi];
+  const ok=G.sel===q.ans;
+  document.querySelectorAll('.ch-btn').forEach(b=>{
+    b.disabled=true;
+    const v=parseInt(b.textContent.replace(/[,\s]/g,''));
+    if(v===q.ans) b.classList.add('ok');
+    else if(v===G.sel) b.classList.add('bad');
+  });
+  if(ok){
+    G.chSc+=10;
+    if(G.chSc > G.bestSc[G.ch]) G.bestSc[G.ch]=G.chSc;
+    G.totSc=G.bestSc.reduce((s,v)=>s+v,0);
+    document.getElementById('gScore').textContent=G.chSc;
+    document.getElementById('gScoreTot').textContent=G.totSc;
+    // แสดงตัวเลขแบบ pop animation
+    const el=document.getElementById('gScoreTot');
+    el.style.transform='scale(1.4)';el.style.transition='transform .15s';
+    setTimeout(()=>{el.style.transform='scale(1)';},150);
+    // อัพเดท ranking realtime ทันทีทุกครั้งที่ตอบถูก
+    saveScore();
+    showFB('✅');ptcl(['⭐','✨','🌟'],6);playSnd('ok');
+  } else {
+    G.hp--;
+    document.getElementById('gHearts').textContent='❤️'.repeat(G.hp)+'🖤'.repeat(3-G.hp);
+    showFB('❌');playSnd('bad');
+    // แสดงเฉลยพร้อมวิธีคิด
+    showSolution(q);
+    if(G.hp<=0){setTimeout(()=>{
+      if(confirm('หมดพลังแล้ว! 😅\nลองใหม่อีกครั้ง?')) startCh();
+      else show('sm');
+    },1200);return;}
+  }
+  setCfm('next');
+}
+
+function endCh(){
+  const tot=G.qs.length*10,pct=G.chSc/tot;
+  const st=pct>=.9?3:pct>=.6?2:1;
+  G.done[G.ch]=true;
+  G.stars[G.ch]=Math.max(G.stars[G.ch],st);
+  // เก็บเฉพาะคะแนนสูงสุดของด่านนี้ แล้วคำนวณ totSc ใหม่
+  if(G.chSc > G.bestSc[G.ch]) G.bestSc[G.ch]=G.chSc;
+  G.totSc=G.bestSc.reduce((s,v)=>s+v,0);
+  document.getElementById('ccSt').textContent='⭐'.repeat(st)+'☆'.repeat(3-st);
+  document.getElementById('ccSc').innerHTML=`<span>${G.chSc}</span> / ${tot}`;
+  const msgs=['ดีมาก! ลองทำให้ได้คะแนนเต็มนะ! 💪','เก่งมาก! เกือบเต็มแล้ว 😊','ยอดเยี่ยม! คะแนนเต็ม! 🌟'];
+  document.getElementById('ccMsg').textContent=msgs[st-1];
+  ptcl(['🎉','⭐','🏴‍☠️'],8);
+  saveScore();
+  if(G.ch===6){
+    setTimeout(()=>{document.getElementById('vSc').textContent=G.totSc;show('sv');},600);
+  } else {
+    show('scc');
+  }
+  renderMap();
+}
+
+function showSolution(q){
+  const a=q._a, b=q._b, ans=q.ans, op=q._op;
+  let steps='', ansLine='';
+  if(op==='add'){
+    // แสดงการบวกแบบตั้งหลัก
+    const aStr=fmt(a), bStr=fmt(b), ansStr=fmt(ans);
+    const w=Math.max(aStr.length,bStr.length,ansStr.length)+2;
+    steps = `  ${aStr.padStart(w)}\n+ ${bStr.padStart(w)}\n${'─'.repeat(w+2)}\n  ${ansStr.padStart(w)}`;
+    ansLine=`คำตอบ: ${fmt(a)} + ${fmt(b)} = ${fmt(ans)}`;
+  } else if(op==='sub'){
+    const aStr=fmt(a), bStr=fmt(b), ansStr=fmt(ans);
+    const w=Math.max(aStr.length,bStr.length,ansStr.length)+2;
+    steps = `  ${aStr.padStart(w)}\n− ${bStr.padStart(w)}\n${'─'.repeat(w+2)}\n  ${ansStr.padStart(w)}`;
+    ansLine=`คำตอบ: ${fmt(a)} − ${fmt(b)} = ${fmt(ans)}`;
+  } else if(op==='mul'){
+    if(b<10){
+      steps=`${fmt(a)} × ${b}\n`;
+      // แสดง partial products หลักสิบ หลักหน่วย
+      const h=Math.floor(a/10)*b, l=(a%10)*b;
+      if(b>=10){
+        const b1=Math.floor(b/10), b0=b%10;
+        const p0=a*b0, p1=a*b1;
+        steps=`${fmt(a)} × ${b0} = ${fmt(p0)}\n${fmt(a)} × ${b1}0 = ${fmt(p1*10)}\n${'─'.repeat(16)}\n${fmt(p0)} + ${fmt(p1*10)} = ${fmt(ans)}`;
+      } else {
+        steps=`${fmt(a)} × ${b} = ${fmt(ans)}`;
+      }
+    } else {
+      const b1=Math.floor(b/10), b0=b%10;
+      const p0=a*b0, p1=a*b1;
+      steps=`${fmt(a)} × ${b0} (หลักหน่วย) = ${fmt(p0)}\n${fmt(a)} × ${b1}0 (หลักสิบ)  = ${fmt(p1*10)}\n${'─'.repeat(22)}\n${fmt(p0)} + ${fmt(p1*10)} = ${fmt(ans)}`;
+    }
+    ansLine=`คำตอบ: ${fmt(a)} × ${fmt(b)} = ${fmt(ans)}`;
+  } else if(op==='div'){
+    const q2=ans, rem=0;
+    steps=`${fmt(a)} ÷ ${b} = ?\n\n${b} × ${fmt(q2)} = ${fmt(a)}\nดังนั้น ${fmt(a)} ÷ ${b} = ${fmt(q2)}`;
+    ansLine=`คำตอบ: ${fmt(a)} ÷ ${b} = ${fmt(ans)}`;
+  }
+  document.getElementById('solStep').textContent=steps;
+  document.getElementById('solAns').textContent=ansLine;
+  document.getElementById('solBox').classList.add('show');
+}
+
+function showFB(e){
+  const el=document.getElementById('fb');
+  document.getElementById('fbIco').textContent=e;
+  el.classList.add('on');
+  setTimeout(()=>el.classList.remove('on'),650);
+}
+
+function ptcl(emos,n){
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const p=document.createElement('div');p.className='ptcl';
+    p.textContent=emos[R(0,emos.length-1)];
+    p.style.left=R(15,85)+'vw';p.style.top=R(35,65)+'vh';
+    document.body.appendChild(p);setTimeout(()=>p.remove(),1100);
+  },i*110);
+}
+
+// ══════════════════════════════════════════════
+//  CANVAS SCRATCH PAD
+// ══════════════════════════════════════════════
+let cv,ctx,drw=false,penC='#fff',eraserMode=false;
+
+function initCV(){
+  cv=document.getElementById('scratch');
+  if(!cv) return;
+
+  // Clone to clear old listeners
+  const nc=cv.cloneNode(false);
+  cv.parentNode.replaceChild(nc,cv);
+  cv=nc;
+
+  const dpr=window.devicePixelRatio||1;
+  const rc=cv.getBoundingClientRect();
+  if(!rc.width) return;
+
+  cv.width=rc.width*dpr;
+  cv.height=rc.height*dpr;
+
+  // desynchronized=true ลด input latency บน iPad
+  ctx=cv.getContext('2d',{desynchronized:true});
+  ctx.scale(dpr,dpr);
+  ctx.lineCap='round';
+  ctx.lineJoin='round';
+
+  // --- state สำหรับ midpoint smoothing ---
+  let p0={x:0,y:0}; // prev point
+  let p1={x:0,y:0}; // current point
+  let mid0={x:0,y:0}; // midpoint ก่อนหน้า
+
+  function cvRect(){ return cv.getBoundingClientRect(); }
+  function getXY(e){
+    const r=cvRect();
+    return{x:e.clientX-r.left, y:e.clientY-r.top, pr:e.pressure||0};
+  }
+
+  function applyStyle(pressure, isPen){
+    if(eraserMode){
+      ctx.globalCompositeOperation='destination-out';
+      ctx.strokeStyle='rgba(0,0,0,1)';
+      ctx.lineWidth=isPen?(pressure>0?Math.max(12,pressure*28):14):18;
+    } else {
+      ctx.globalCompositeOperation='source-over';
+      ctx.strokeStyle=penC;
+      // pen: pressure sensitive 1–3.5px, finger/mouse: 2.5px คงที่
+      ctx.lineWidth=isPen?(pressure>0?Math.max(1,pressure*3.5):2):2.5;
+    }
+  }
+
+  // วาด smooth segment ด้วย midpoint quadratic bezier
+  // moveTo(mid0) → quadraticCurveTo(p0, mid1)
+  function drawSmooth(x, y, pressure, isPen){
+    const mid1={x:(p0.x+x)/2, y:(p0.y+y)/2};
+    applyStyle(pressure, isPen);
+    ctx.beginPath();
+    ctx.moveTo(mid0.x, mid0.y);
+    ctx.quadraticCurveTo(p0.x, p0.y, mid1.x, mid1.y);
+    ctx.stroke();
+    mid0=mid1;
+    p0={x,y};
+  }
+
+  cv.addEventListener('pointerdown',e=>{
+    drw=true;
+    cv.setPointerCapture(e.pointerId);
+    const {x,y,pr}=getXY(e);
+    p0={x,y}; mid0={x,y};
+    const isPen=e.pointerType==='pen';
+    applyStyle(pr, isPen);
+    // dot เล็กๆ เมื่อแตะโดยไม่ลาก
+    ctx.beginPath();
+    ctx.arc(x, y, ctx.lineWidth/2, 0, Math.PI*2);
+    ctx.fillStyle = eraserMode ? 'rgba(0,0,0,1)' : penC;
+    ctx.fill();
+    // reset เส้นหลังจาก fill
+    ctx.globalCompositeOperation = eraserMode ? 'destination-out' : 'source-over';
+    e.preventDefault();
+  },{passive:false});
+
+  cv.addEventListener('pointermove',e=>{
+    if(!drw) return;
+    const isPen=e.pointerType==='pen';
+    const coalesced=e.getCoalescedEvents?e.getCoalescedEvents():[e];
+    for(const ce of coalesced){
+      const {x,y,pr}=getXY(ce);
+      // กรองจุดที่ใกล้เกินไป (< 0.5px) ออก
+      const dx=x-p0.x, dy=y-p0.y;
+      if(dx*dx+dy*dy < 0.25) continue;
+      drawSmooth(x,y,pr,isPen);
+    }
+    e.preventDefault();
+  },{passive:false});
+
+  cv.addEventListener('pointerup',e=>{
+    if(!drw) return;
+    drw=false;
+    const {x,y,pr}=getXY(e);
+    drawSmooth(x,y,pr,e.pointerType==='pen');
+  },{passive:true});
+
+  cv.addEventListener('pointercancel',()=>{drw=false;},{passive:true});
+}
+function toggleEraser(btn){
+  eraserMode=!eraserMode;
+  btn.classList.toggle('on',eraserMode);
+  if(eraserMode){
+    document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));
+  } else {
+    // กลับโหมดปากกา — reset composite
+    if(ctx) ctx.globalCompositeOperation='source-over';
+    const active=document.querySelector(`.cb[data-c="${penC}"]`);
+    if(active) active.classList.add('on');
+  }
+}
+function setC(btn){
+  eraserMode=false;
+  document.getElementById('eraserBtn').classList.remove('on');
+  penC=btn.dataset.c;
+  document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(ctx){
+    ctx.strokeStyle=penC;
+    ctx.globalCompositeOperation='source-over';
+  }
+}
+function clrCV(){
+  if(!cv||!ctx) return;
+  const dpr=window.devicePixelRatio||1;
+  // reset composite ก่อนล้าง ป้องกัน destination-out ค้าง
+  ctx.globalCompositeOperation='source-over';
+  ctx.clearRect(0,0,cv.width/dpr,cv.height/dpr);
+}
+
+// ══════════════════════════════════════════════
+//  MUSIC
+// ══════════════════════════════════════════════
+let aCtx,mT;
+const MEL=[ // D minor pirate melody
+  [294,200],[330,200],[392,200],[440,400],[392,200],
+  [349,200],[330,400],[294,200],[262,200],[294,400],
+  [392,200],[440,200],[494,200],[523,400],[440,200],
+  [392,600],[330,200],[349,200],[392,200],[440,400],
+];
+let mIdx=0;
+
+function startMusic(){
+  if(!G.mOn)return;
+  try{aCtx=new(window.AudioContext||window.webkitAudioContext)();playMel();}catch(e){}
+}
+function togMusic(){
+  G.mOn=!G.mOn;
+  document.querySelectorAll('.mu').forEach(b=>b.textContent=G.mOn?'🔊':'🔇');
+  if(G.mOn) startMusic();
+  else{clearTimeout(mT);try{aCtx&&aCtx.close();}catch(e){}aCtx=null;}
+}
+function pNote(f,d){
+  if(!aCtx||!G.mOn)return;
+  try{
+    const o=aCtx.createOscillator(),g=aCtx.createGain();
+    o.connect(g);g.connect(aCtx.destination);
+    o.type='sawtooth';o.frequency.value=f;
+    g.gain.setValueAtTime(.07,aCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,aCtx.currentTime+d/1000);
+    o.start();o.stop(aCtx.currentTime+d/1000);
+  }catch(e){}
+}
+function playMel(){
+  if(!G.mOn||!aCtx)return;
+  const[f,d]=MEL[mIdx%MEL.length];
+  pNote(f,d);mIdx++;
+  mT=setTimeout(playMel,d+15);
+}
+function playSnd(t){
+  if(!aCtx||!G.mOn)return;
+  if(t==='ok')[523,659,784].forEach((f,i)=>setTimeout(()=>pNote(f,120),i*90));
+  else[330,294,262].forEach((f,i)=>setTimeout(()=>pNote(f,120),i*70));
+}
+
+// ══════════════════════════════════════════════
+//  FIREBASE — PROGRESS + LEADERBOARD
+// ══════════════════════════════════════════════
+const COL_LB  = 'leaderboard';
+const COL_PLR = 'players';
+const LS_LB   = 'op_eb2_lb';
+const LS_PLR  = 'op_eb2_plr';
+
+// ─── บันทึก progress (done/stars/bestSc/totSc) ───
+async function saveProgress(){
+  if(!G.name) return;
+  const data = {
+    name: G.name,
+    totSc: G.totSc,
+    done: [...G.done],
+    stars: [...G.stars],
+    bestSc: [...G.bestSc],
+    lastSaved: new Date().toLocaleDateString('th-TH'),
+    ts: Date.now()
+  };
+  // localStorage fallback เสมอ
+  try{
+    const m = JSON.parse(localStorage.getItem(LS_PLR)||'{}');
+    m[G.name] = data;
+    localStorage.setItem(LS_PLR, JSON.stringify(m));
+  }catch(_){}
+  // Firebase (ถ้าออนไลน์)
+  if(db){ try{ await db.collection(COL_PLR).doc(G.name).set(data); }catch(_){} }
+}
+
+// ─── โหลด progress ข้ามเครื่อง ───
+async function loadProgress(name){
+  // ลอง Firebase ก่อน
+  if(db){
+    try{
+      const snap = await db.collection(COL_PLR).doc(name).get();
+      if(snap.exists){
+        const d = snap.data();
+        G.name=d.name; G.totSc=d.totSc||0;
+        G.done=[...( d.done||Array(7).fill(false))];
+        G.stars=[...(d.stars||Array(7).fill(0))];
+        G.bestSc=[...(d.bestSc||Array(7).fill(0))];
+        return true; // พบข้อมูล
+      }
+    }catch(_){}
+  }
+  // Fallback: localStorage
+  try{
+    const m = JSON.parse(localStorage.getItem(LS_PLR)||'{}');
+    if(m[name]){
+      const d = m[name];
+      G.name=d.name; G.totSc=d.totSc||0;
+      G.done=[...(d.done||Array(7).fill(false))];
+      G.stars=[...(d.stars||Array(7).fill(0))];
+      G.bestSc=[...(d.bestSc||Array(7).fill(0))];
+      return true;
+    }
+  }catch(_){}
+  return false; // ผู้เล่นใหม่
+}
+
+// ─── บันทึก leaderboard ───
+async function saveScore(){
+  if(!G.name) return;
+  const chapDone = G.done.filter(Boolean).length;
+  const entry = {
+    name: G.name, score: G.totSc, chap: chapDone,
+    date: new Date().toLocaleDateString('th-TH'), ts: Date.now()
+  };
+  // localStorage
+  try{
+    const m = JSON.parse(localStorage.getItem(LS_LB)||'{}');
+    if(!m[G.name]||m[G.name].score < G.totSc) m[G.name]=entry;
+    localStorage.setItem(LS_LB, JSON.stringify(m));
+  }catch(_){}
+  // Firebase
+  if(db){
+    try{
+      const ref = db.collection(COL_LB).doc(G.name);
+      const snap = await ref.get();
+      if(!snap.exists||snap.data().score < G.totSc) await ref.set(entry);
+    }catch(_){}
+  }
+  // บันทึก progress ด้วยทุกครั้ง
+  saveProgress();
+}
+
+// ─── โหลด Ranking Top 10 ───
+async function loadLB(){
+  const el = document.getElementById('lbList');
+  el.innerHTML = '<div class="lb-empty">กำลังโหลด Ranking... ⏳</div>';
+  let entries = [];
+  let lsEntries = {};
+  try{ lsEntries = JSON.parse(localStorage.getItem(LS_LB)||'{}'); }catch(_){}
+
+  if(db){
+    try{
+      const snap = await db.collection(COL_LB).orderBy('score','desc').limit(10).get();
+      if(!snap.empty){ snap.forEach(doc=>entries.push(doc.data())); }
+      else { entries = Object.values(lsEntries); }
+    }catch(_){ entries = Object.values(lsEntries); }
+  } else {
+    entries = Object.values(lsEntries);
+  }
+
+  entries.sort((a,b)=>b.score-a.score);
+  entries = entries.slice(0,10); // Top 10
+
+  if(!entries.length){
+    el.innerHTML='<div class="lb-empty">🏴‍☠️ ยังไม่มีข้อมูล Ranking<br><small>เล่นจนจบด่านแรกแล้วมาดูอีกครั้ง!</small></div>';
+    return;
+  }
+  const medals=['🥇','🥈','🥉'];
+  const mapIco=['🏝️','⚓','🍊','🏹','🍳','🌊','⚡'];
+  // ตรวจว่าตัวเองอยู่ใน top10 ไหม
+  const myRank = entries.findIndex(e=>e.name===G.name);
+  el.innerHTML = entries.map((e,i)=>{
+    const me=e.name===G.name;
+    const prog=e.chap>0?`<span style="color:#aaa;font-size:.7rem;margin-left:4px;">${mapIco.slice(0,e.chap).join('')}</span>`:'';
+    return `<div class="lb-row${me?' me':''}">
+      <div class="lb-rank">${medals[i]||'#'+(i+1)}</div>
+      <div class="lb-name">${me?'👤 ':''}${e.name}${prog}</div>
+      <div class="lb-sc">⭐ ${e.score}</div>
+      <div class="lb-dt">${e.date||''}</div>
+    </div>`;
+  }).join('') + (myRank===-1&&G.name?`<div style="text-align:center;color:#888;font-size:.8rem;padding:12px 0;">— คุณยังไม่ติด Top 10 —</div>`:'');
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+(function init(){
+  // Stars
+  const sc=document.getElementById('stars');
+  for(let i=0;i<55;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*65}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s`;
+    sc.appendChild(s);
+  }
+  // Resume audio on touch (iOS)
+  document.addEventListener('touchstart',()=>{
+    if(aCtx&&aCtx.state==='suspended')aCtx.resume();
+  },{passive:true});
+  // Resize canvas
+  window.addEventListener('resize',()=>{
+    if(document.getElementById('sg').classList.contains('on')) setTimeout(initCV,150);
+  });
+  // Enter key on name input
+  document.getElementById('inp').addEventListener('keydown',e=>{
+    if(e.key==='Enter') startGame();
+  });
+  show('sw');
+})();
+</script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDFCKNOOlU2Vx6H20NxQIqlBaqI869D058",
+  authDomain: "onepieceeastblue2.firebaseapp.com",
+  projectId: "onepieceeastblue2",
+  storageBucket: "onepieceeastblue2.firebasestorage.app",
+  messagingSenderId: "991197348396",
+  appId: "1:991197348396:web:c181cf2d0f4d14a5320789"
+};
+let db = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  // เปิด offline persistence (เล่นได้แม้ไม่มีเน็ต)
+  db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+} catch(e) {
+  // Firebase unavailable — localStorage fallback will be used
+}
+</script>
+</body>
+</html>
